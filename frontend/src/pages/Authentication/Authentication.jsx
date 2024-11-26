@@ -2,10 +2,20 @@ import React, { useState } from "react";
 import styles from "./Authentication.module.css";
 
 const Authentication = () => {
-  const [isRegistering, setIsRegistering] = useState(false); // State to toggle between login and registration
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [formValues, setFormValues] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const handleToggle = () => {
-    setIsRegistering(!isRegistering); // Toggle between login and registration
+  const handleToggle = () => setIsRegistering(!isRegistering);
+
+  const handleChange = (e) => {
+    setFormValues({ ...formValues, [e.target.id]: e.target.value });
   };
 
   return (
@@ -21,80 +31,85 @@ const Authentication = () => {
         <section className={styles.formColumn}>
           <div className={styles.formWrapper}>
             <h1 className={styles.title}>UMTutorConnect</h1>
-
             <div className={styles.tabContainer}>
               <button
-                className={`${styles.tabButton} ${!isRegistering ? styles.activeTab : ""}`}
+                className={`${styles.tabButton} ${
+                  !isRegistering ? styles.activeTab : ""
+                }`}
                 onClick={handleToggle}
               >
                 Login
               </button>
               <button
-                className={`${styles.tabButton} ${isRegistering ? styles.activeTab : ""}`}
+                className={`${styles.tabButton} ${
+                  isRegistering ? styles.activeTab : ""
+                }`}
                 onClick={handleToggle}
               >
                 Register
               </button>
             </div>
-
-            {/* Toggle between Login and Registration */}
-            {isRegistering ? (
-              <form className={styles.loginForm}>
+            <form className={styles.loginForm}>
+              {isRegistering && (
                 <div className={styles.nameFields}>
                   <input
                     type="text"
                     id="firstName"
+                    value={formValues.firstName}
+                    onChange={handleChange}
                     className={`${styles.inputField} ${styles.nameField}`}
                     placeholder="First Name"
                   />
                   <input
                     type="text"
                     id="lastName"
+                    value={formValues.lastName}
+                    onChange={handleChange}
                     className={`${styles.inputField} ${styles.nameField}`}
                     placeholder="Last Name"
                   />
                 </div>
+              )}
+              <input
+                type="text"
+                id="username"
+                value={formValues.username}
+                onChange={handleChange}
+                className={styles.inputField}
+                placeholder="Username"
+              />
+              {isRegistering && (
                 <input
                   type="email"
                   id="email"
+                  value={formValues.email}
+                  onChange={handleChange}
                   className={styles.inputField}
                   placeholder="Email"
                 />
-                <input
-                  type="password"
-                  id="password"
-                  className={`${styles.inputField} ${styles.passwordField}`}
-                  placeholder="Password"
-                />
+              )}
+              <input
+                type="password"
+                id="password"
+                value={formValues.password}
+                onChange={handleChange}
+                className={`${styles.inputField} ${styles.passwordField}`}
+                placeholder="Password"
+              />
+              {isRegistering && (
                 <input
                   type="password"
                   id="confirmPassword"
+                  value={formValues.confirmPassword}
+                  onChange={handleChange}
                   className={`${styles.inputField} ${styles.passwordField}`}
                   placeholder="Confirm Password"
                 />
-                <button type="submit" className={styles.loginButton}>
-                  Register
-                </button>
-              </form>
-            ) : (
-              <form className={styles.loginForm}>
-                <input
-                  type="text"
-                  id="username"
-                  className={styles.inputField}
-                  placeholder="Username"
-                />
-                <input
-                  type="password"
-                  id="password"
-                  className={`${styles.inputField} ${styles.passwordField}`}
-                  placeholder="Password"
-                />
-                <button type="submit" className={styles.loginButton}>
-                  Login
-                </button>
-              </form>
-            )}
+              )}
+              <button type="submit" className={styles.loginButton}>
+                {isRegistering ? "Register" : "Login"}
+              </button>
+            </form>
           </div>
         </section>
       </div>

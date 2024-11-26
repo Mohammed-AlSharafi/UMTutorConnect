@@ -1,0 +1,71 @@
+.header {
+  background-color: #545B9E;
+  color: white;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.logoBlock{
+  text-decoration: none;
+  color: white; 
+}
+
+.logoImage {
+  width: 60px;
+  height: 60px;
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.navLink {
+  color: white;
+  text-decoration: none;
+}
+
+.active {
+  font-weight: bold;
+  color: #FFD700;
+}
+
+.search {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  margin-right: 1rem;
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.searchButton {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
