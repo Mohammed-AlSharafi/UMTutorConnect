@@ -1,0 +1,40 @@
+.profileContainer {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.profileContainer img {
+    display: block;
+    max-width: 100%;
+}
+
+.profileDetailsContainer {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    max-width: 250px;
+    margin: 2rem;
+}
+
+.profileDetailsContainer h2 {
+    margin: 0;
+}
+
+.profileDetailsContainer p {
+    margin: 0;
+    padding: 0;
+    color: #858383;
+    line-height: 1.5;
+}
+
+.profileDetailsContainer button {
+    background-color: #040A79;
+    border: 0;
+    border-radius: .5rem;
+    padding: 10px 15px;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+}

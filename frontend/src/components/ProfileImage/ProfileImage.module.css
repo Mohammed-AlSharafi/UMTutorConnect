@@ -1,0 +1,9 @@
+.profileImgContainer {
+    width: 150px;
+    height: 150px;
+}
+
+.profileImgContainer img {
+    border-radius: 50%;
+    border: 2px solid #7c81d3;
+}

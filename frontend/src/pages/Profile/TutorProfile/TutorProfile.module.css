@@ -1,0 +1,35 @@
+.tutorProfileContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tutorProfileContainer h3 {
+    margin: 0;
+}
+
+.tutorProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ratingContainer {
+    text-align: center;
+}
+
+.ratingContainer {
+    margin: 1rem 0rem;
+    font-size: 2rem;
+}
+
+.rating {
+    color: #6DB467;
+}
+
+.hourlyRate {
+    font-size: 2rem;
+    text-align: center;
+    margin: 1rem 0rem;
+}
