@@ -1,0 +1,37 @@
+.container {
+    text-align: center;
+    padding: 100px;
+    background: linear-gradient(to right, #D9D9D9, #474CA9);
+}
+
+.searchContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.title {
+    padding-bottom: 30px;
+}
+
+.inputField {
+    width: 60%;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+}
+
+.inputField::placeholder {
+    font-size: 20px;
+    color: black;
+}
+
+.button {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 15px;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 36px;
+    cursor: pointer;
+}
