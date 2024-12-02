@@ -3,8 +3,11 @@ import styles from './Header.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import gradHat from '../../images/grad_hat.png';
+import { Link, useLocation } from 'react-router-dom';
 
 function Header() {
+  const location = useLocation();
+
   return (
     <header className={styles.header}>
       <a href="/" className={styles.logoBlock}>
@@ -14,10 +17,30 @@ function Header() {
         </div>
       </a>
       <nav className={styles.nav}>
-        <a href="#" className={styles.navLink}>Home</a>
-        <a href="#" className={styles.navLink}>Profile</a>
-        <a href="#" className={`${styles.navLink} ${styles.active}`}>Messages</a>
-        <a href="#" className={styles.navLink}>Settings</a>
+        <Link
+          to="/"
+          className={`${styles.navLink} ${location.pathname === '/' ? styles.active : ''}`}
+        >
+          Home
+        </Link>
+        <Link
+          to="/profile"
+          className={`${styles.navLink} ${location.pathname === '/profile' ? styles.active : ''}`}
+        >
+          Profile
+        </Link>
+        <Link
+          to="/communication"
+          className={`${styles.navLink} ${location.pathname === '/communication' ? styles.active : ''}`}
+        >
+          Communication
+        </Link>
+        <Link
+          to="/settings"
+          className={`${styles.navLink} ${location.pathname === '/settings' ? styles.active : ''}`}
+        >
+          Settings
+        </Link>
       </nav>
       <div className={styles.search}>
         <input type="text" placeholder="What would you like to learn?" className={styles.searchInput} />
@@ -28,4 +51,3 @@ function Header() {
 }
 
 export default Header;
-

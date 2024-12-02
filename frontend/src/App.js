@@ -4,14 +4,26 @@ import Communication from './pages/Communication/Communication';
 import Header from './components/Header/Header';
 import Profile from './pages/Profile';
 import Home from './pages/Home/Home';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 
 function App() {
-  return <div className={styles.app}>
-    <Header />
-    {/*<Home/>*/}
-    <Communication />
-    {/* <Profile /> */}
-    </div>;
+  return (
+    <Router>
+      <Header />
+      <div className={styles.app}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/communication" element={<Communication />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
