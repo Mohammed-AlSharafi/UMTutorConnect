@@ -19,9 +19,9 @@ function MessageList({ chats, selectedChat, onSelectChat, onSearch }) {
       <div className={styles.contacts}>
         {chats.map((chat) => (
           <button 
-            key={chat.id} 
-            className={`${styles.contact} ${selectedChat.id === chat.id ? styles.active : ''}`}
-            onClick={() => onSelectChat(chat.id)}
+            key={chat._id} 
+            className={`${styles.contact} ${selectedChat._id === chat._id ? styles.active : ''}`}
+            onClick={() => onSelectChat(chat._id)}
           >
             {chat.name}
           </button>
