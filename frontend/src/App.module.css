@@ -4,3 +4,7 @@
     height: 100vh;
     background-color: #D1D5DB;
   }
+
+  .header{
+    position: fixed;
+  }
