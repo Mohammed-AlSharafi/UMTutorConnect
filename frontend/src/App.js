@@ -14,12 +14,13 @@ import {
 function App() {
   return (
     <Router>
-      <Header />
+      {/* <Header /> */}
       <div className={styles.app}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/communication" element={<Communication />} />
+          <Route path="/authentication" element={<Authentication />} />
         </Routes>
       </div>
     </Router>
