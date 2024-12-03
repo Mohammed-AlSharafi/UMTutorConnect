@@ -23,6 +23,12 @@ const tutorSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    fullName: {
+        type: String,
+        default: function () {
+            return this.firstName + " " + this.lastName;
+        },
+    },
     // profilePicture: {
     //     type: String,
     // },

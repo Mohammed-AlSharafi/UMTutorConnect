@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './ChatArea.module.css';
 
-function ChatArea({ chat, onSendMessage, username }) {
+function ChatArea({ chat, onSendMessage, userId }) {
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -26,7 +26,7 @@ function ChatArea({ chat, onSendMessage, username }) {
       </div>
       <div className={styles.messages}>
         {chat.messages.map((message, index) => (
-          <div key={index} className={`${styles.message} ${message.sender.username === username ? styles.tutor : ''}`}>
+          <div key={index} className={`${styles.message} ${message.sender.id === userId ? styles.tutor : ''}`}>
             <div className={styles.messageContent}>
               {message.content}
             </div>
