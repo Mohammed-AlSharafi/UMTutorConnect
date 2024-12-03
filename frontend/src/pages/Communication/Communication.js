@@ -73,17 +73,24 @@ const Communication = () => {
         const newMessage = await sendMessage(selectedChat._id, loggedInUser, content);
 
         console.log(newMessage);
-        
+
+        const updatedSelectedChat = {
+            ...selectedChat,
+            messages: [...selectedChat.messages, newMessage],
+            lastMessage: newMessage.timestamp
+        }
+
         const updatedChats = chats.map(chat =>
             chat._id === selectedChat._id
-                ? { ...chat, messages: [...chat.messages, newMessage] }
+                ? updatedSelectedChat
                 : chat
         );
+
+        updatedChats.sort((a, b) => new Date(b.lastMessage) - new Date(a.lastMessage))
+
+        console.log(updatedChats);
         setChats(updatedChats);
-        setSelectedChat(prevChat => ({
-            ...prevChat,
-            messages: [...prevChat.messages, newMessage]
-        }));
+        setSelectedChat(updatedSelectedChat);
     };
 
     // conditionally render MessageList and ChatArea components chats selectedChats and filteredChats are available

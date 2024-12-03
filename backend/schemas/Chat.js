@@ -102,11 +102,12 @@ chatSchema.methods.addMessage = async function (content, sender) {
     sender,
   });
 
-  this.lastMessage = new Date();
+  const newMessage = this.messages[this.messages.length - 1];
+  this.lastMessage = newMessage.timestamp;    // update lastMessage time of chat so that latest chats can be shown first
   await this.save();
 
   // return the newly added message
-  return this.messages[this.messages.length - 1];
+  return newMessage;
 };
 
 const model = mongoose.model('Chat', chatSchema);
