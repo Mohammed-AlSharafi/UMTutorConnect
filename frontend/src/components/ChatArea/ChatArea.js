@@ -26,7 +26,7 @@ function ChatArea({ chat, onSendMessage, username }) {
       </div>
       <div className={styles.messages}>
         {chat.messages.map((message, index) => (
-          <div key={index} className={`${styles.message} ${message.sender === username ? styles.tutor : ''}`}>
+          <div key={index} className={`${styles.message} ${message.sender.username === username ? styles.tutor : ''}`}>
             <div className={styles.messageContent}>
               {message.content}
             </div>

@@ -1,59 +1,70 @@
 import styles from "./Communication.module.css";
 import MessageList from "../../components/MessageList/MessageList";
 import ChatArea from "../../components/ChatArea/ChatArea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { getChats, sendMessage } from "../../proxies/chats";
 
 const Communication = () => {
-    const [chats, setChats] = useState([
-        {
-            id: 1, name: 'Victor', messages: [
-                { sender: 'Victor', content: "Hello, Sir! My name is Victor Chong, and I'm currently in year 3." },
-                { sender: 'Victor', content: "I want to learn Probability & Statistic from you. Could you please help me?" },
-                { sender: 'Tutor', content: "Good evening, Victor. I hope you're doing well. I would be delighted to teach you Probability and Statistics. How about we start with a session focused on solving problems to assess your current level and identify areas to improve?" },
-                { sender: 'Tutor', content: "Are you free on Saturday at 11:00 am?" },
-                { sender: 'Victor', content: "Yes Sir! I'm free." },
-            ]
-        },
-        {
-            id: 2, name: 'John', messages: [
-                { sender: 'John', content: "Hi, I'm having trouble with calculus. Can you help?" },
-                { sender: 'Tutor', content: "Of course, John. What specific topic in calculus are you struggling with?" },
-            ]
-        },
-        {
-            id: 3, name: 'Amy', messages: [
-                { sender: 'Amy', content: "Hello! I'm preparing for my physics exam. Any tips?" },
-                { sender: 'Tutor', content: "Hi Amy! Let's start by reviewing the main concepts. What chapters are covered in your exam?" },
-            ]
-        },
-        {
-            id: 4, name: 'Sarah', messages: [
-                { sender: 'Sarah', content: "Good morning! I need help with my chemistry homework." },
-                { sender: 'Tutor', content: "Good morning, Sarah! I'd be happy to help. What's the topic of your homework?" },
-            ]
-        },
-    ]);
-
-    const [selectedChat, setSelectedChat] = useState(chats[0]);
+    const [user, setUser] = useState({
+        "_id": "674df9e27ef21d531febbeb3",
+        "username": "tan_hock_leong",
+        "password": "password123",
+        "email": "tan.hockleong@example.com",
+        "firstName": "Tan",
+        "lastName": "Hock Leong",
+        "bio": "Veteran instructor in Computer Science and Programming.",
+        "subjects": [
+          "Java",
+          "Web Development"
+        ],
+        "rate": 65,
+        "role": "Tutor",
+        "__v": 0
+      });
+    const [chats, setChats] = useState(null);
+    const [selectedChat, setSelectedChat] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [filteredChats, setFilteredChats] = useState([]);
 
-    const filteredChats = chats.filter(chat =>
-        chat.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    useEffect(() => {
+        // get chats from backend
+        async function fetchChats() {
+            const chats = await getChats(user._id, user.role);
+            console.log(chats);
+            if (chats) {
+                setChats(chats);
+                setSelectedChat(chats[0]);
+            }
+        }
+        fetchChats();
+    }, [user]);
+
+    useEffect(() => {
+        if (chats) {
+            const filteredChats = chats.filter(chat =>
+                chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredChats(filteredChats);
+        }
+    }, [chats, searchTerm]);
 
     const handleSearch = (term) => {
         setSearchTerm(term);
     };
 
     const handleSelectChat = (chatId) => {
-        const chat = chats.find(c => c.id === chatId);
+        const chat = chats.find(c => c._id === chatId);
         setSelectedChat(chat);
     };
 
-    const handleSendMessage = (content) => {
-        const newMessage = { sender: 'Tutor', content };
+    const handleSendMessage = async (content) => {
+        const newMessage = await sendMessage(selectedChat._id, user, content);
+
+        console.log(newMessage);
+        
         const updatedChats = chats.map(chat =>
-            chat.id === selectedChat.id
+            chat._id === selectedChat._id
                 ? { ...chat, messages: [...chat.messages, newMessage] }
                 : chat
         );
@@ -64,19 +75,24 @@ const Communication = () => {
         }));
     };
 
+    // conditionally render MessageList and ChatArea components chats selectedChats and filteredChats are available
     return (
         <div className={styles.container}>
-            <MessageList
-                chats={filteredChats}
-                selectedChat={selectedChat}
-                onSelectChat={handleSelectChat}
-                onSearch={handleSearch}
-            />
-            <ChatArea
-                chat={selectedChat}
-                onSendMessage={handleSendMessage}
-                username={'Tutor'}
-            />
+            {(chats && selectedChat && filteredChats) && (
+                <>
+                    <MessageList
+                        chats={filteredChats}
+                        selectedChat={selectedChat}
+                        onSelectChat={handleSelectChat}
+                        onSearch={handleSearch}
+                    />
+                    <ChatArea
+                        chat={selectedChat}
+                        onSendMessage={handleSendMessage}
+                        username={user.username}
+                    />
+                </>
+            )}
         </div>
     );
 };
