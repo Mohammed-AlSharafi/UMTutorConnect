@@ -36,7 +36,7 @@ router.post('/chats/:chatId/messages', async (req, res) => {
     // add message to chat
     const chat = await chatModel.findById(chatId);
 
-    const sender = { id: user._id, username: user.username, role: user.role };
+    const sender = { id: user._id, fullName: user.fullName, role: user.role };
     const message = await chat.addMessage(content, sender);
     console.log(message);
 

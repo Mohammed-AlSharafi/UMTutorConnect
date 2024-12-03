@@ -6,22 +6,33 @@ import { useEffect, useState } from "react";
 import { getChats, sendMessage } from "../../proxies/chats";
 
 const Communication = () => {
-    const [user, setUser] = useState({
-        "_id": "674df9e27ef21d531febbeb3",
-        "username": "tan_hock_leong",
+    // temporary logged in user state for testing
+    const [loggedInUser, setLoggedInUser] = useState({
+        "_id": "674ea3a9ed69105352b6470d",
+        "username": "ahmad_rahman",
         "password": "password123",
-        "email": "tan.hockleong@example.com",
-        "firstName": "Tan",
-        "lastName": "Hock Leong",
-        "bio": "Veteran instructor in Computer Science and Programming.",
+        "email": "ahmad.rahman@example.com",
+        "firstName": "Ahmad",
+        "lastName": "Rahman",
+        "bio": "Seasoned teacher in Physics and Engineering.",
         "subjects": [
-          "Java",
-          "Web Development"
+            "Physics",
+            "Thermodynamics"
         ],
-        "rate": 65,
+        "rate": 55,
         "role": "Tutor",
-        "__v": 0
-      });
+        "fullName": "Ahmad Rahman",
+    });
+    // const [loggedInUser, setLoggedInUser] = useState({
+    //     "_id": "674ea3a8ed69105352b64704",
+    //     "username": "aisha_yusof",
+    //     "password": "password123",
+    //     "email": "aisha.yusof@example.com",
+    //     "firstName": "Aisha",
+    //     "lastName": "Yusof",
+    //     "role": "Student",
+    //     "fullName": "Aisha Yusof",
+    // });
     const [chats, setChats] = useState(null);
     const [selectedChat, setSelectedChat] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -30,7 +41,7 @@ const Communication = () => {
     useEffect(() => {
         // get chats from backend
         async function fetchChats() {
-            const chats = await getChats(user._id, user.role);
+            const chats = await getChats(loggedInUser._id, loggedInUser.role);
             console.log(chats);
             if (chats) {
                 setChats(chats);
@@ -38,12 +49,12 @@ const Communication = () => {
             }
         }
         fetchChats();
-    }, [user]);
+    }, [loggedInUser]);
 
     useEffect(() => {
         if (chats) {
             const filteredChats = chats.filter(chat =>
-                chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+                chat.fullName.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setFilteredChats(filteredChats);
         }
@@ -59,7 +70,7 @@ const Communication = () => {
     };
 
     const handleSendMessage = async (content) => {
-        const newMessage = await sendMessage(selectedChat._id, user, content);
+        const newMessage = await sendMessage(selectedChat._id, loggedInUser, content);
 
         console.log(newMessage);
         
@@ -89,7 +100,7 @@ const Communication = () => {
                     <ChatArea
                         chat={selectedChat}
                         onSendMessage={handleSendMessage}
-                        username={user.username}
+                        userId={loggedInUser._id}
                     />
                 </>
             )}
