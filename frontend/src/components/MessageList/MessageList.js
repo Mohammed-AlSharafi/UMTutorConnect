@@ -23,7 +23,7 @@ function MessageList({ chats, selectedChat, onSelectChat, onSearch }) {
             className={`${styles.contact} ${selectedChat._id === chat._id ? styles.active : ''}`}
             onClick={() => onSelectChat(chat._id)}
           >
-            {chat.name}
+            {chat.fullName}
           </button>
         ))}
       </div>

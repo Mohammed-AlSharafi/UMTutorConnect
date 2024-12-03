@@ -5,7 +5,7 @@ const participantSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  username: {
+  fullName: {
     type: String,
     required: true,
   },
@@ -46,8 +46,8 @@ chatSchema.statics.findOrCreateChat = async function (user1, user2) {
   const chat = await this.findOne({
     participants: {
       $all: [
-        { id: user1._id, username: user1.username, role: user1.role },
-        { id: user2._id, username: user2.username, role: user2.role },
+        { id: user1._id, fullName: user1.fullName, role: user1.role },
+        { id: user2._id, fullName: user2.fullName, role: user2.role },
       ],
     },
   });
@@ -58,8 +58,8 @@ chatSchema.statics.findOrCreateChat = async function (user1, user2) {
 
   const newChat = new this({
     participants: [
-      { id: user1._id, username: user1.username, role: user1.role },
-      { id: user2._id, username: user2.username, role: user2.role },
+      { id: user1._id, fullName: user1.fullName, role: user1.role },
+      { id: user2._id, fullName: user2.fullName, role: user2.role },
     ],
   });
 
@@ -86,7 +86,7 @@ chatSchema.statics.getChats = async function (userId) {
     console.log(otherParticipant);
     return {
       ...chat.toObject(), // Convert Mongoose document to plain JS object
-      name: otherParticipant?.username || "Unknown", // Add 'name' field
+      fullName: otherParticipant?.fullName || "Unknown", // Add 'name' field
     };
   });
 
@@ -102,11 +102,12 @@ chatSchema.methods.addMessage = async function (content, sender) {
     sender,
   });
 
-  this.lastMessage = new Date();
+  const newMessage = this.messages[this.messages.length - 1];
+  this.lastMessage = newMessage.timestamp;    // update lastMessage time of chat so that latest chats can be shown first
   await this.save();
 
   // return the newly added message
-  return this.messages[this.messages.length - 1];
+  return newMessage;
 };
 
 const model = mongoose.model('Chat', chatSchema);
