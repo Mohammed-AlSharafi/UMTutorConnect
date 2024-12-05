@@ -7,6 +7,46 @@ const bcrypt = require("bcryptjs");
 // import student model
 const studentModel = require('../schemas/Student');
 
+// Register student (POST)
+router.post("/register", async (req, res) => {
+  try {
+    const { firstName, lastName, username, email, password } = req.body;
+
+    // Check if the student already exists
+    const existingStudent = await studentModel.findOne({ username });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    // Hash the password before saving
+    //const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new student
+    const newStudent = new studentModel({
+      firstName,
+      lastName,
+      username,
+      email,
+      password
+    });
+
+     // Save the student to the database
+    await newStudent.save();
+
+    
+
+    // Send success response
+    res.status(201).json({ message: "Student registered successfully", student: newStudent });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+});
+
+
+
+
+
 // set routes
 
 // get all students
@@ -71,3 +111,5 @@ router.post("/authenticate", async (req, res) => {
 
 
 module.exports = router;
+
+
