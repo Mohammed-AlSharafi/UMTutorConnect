@@ -22,3 +22,22 @@ const authenticateStudent = async (username, password) => {
 }
 
 export { authenticateStudent };
+
+
+
+const registerStudent = async (studentData) => {
+  try {
+    const response = await axiosInstance.post("/studentApi/register", studentData);
+    console.log("Student registered: ", response);
+    return response;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error response:", error.response);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+};
+
+export { registerStudent };
