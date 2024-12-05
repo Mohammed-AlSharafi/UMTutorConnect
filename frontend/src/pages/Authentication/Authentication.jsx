@@ -57,14 +57,7 @@ const Authentication = () => {
     console.log('Form submitted:', formValues);
 
     if(isRegistering && !isTutor){
-    alert(`
-    First Name: ${formValues.firstName}
-    Last Name: ${formValues.lastName}
-    Username: ${formValues.username}
-    Email: ${formValues.email}
-    Password: ${formValues.password}
-    Role: ${formValues.role}
-  `);
+    
       const { firstName, lastName, username, email, password } = formValues;
       try {
       const response = await registerStudent({ firstName, lastName, username, email, password });
