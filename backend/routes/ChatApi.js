@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {authMiddleware} = require("./middleware/AuthMiddleware");
 
 // import Chat model
 const chatModel = require('../schemas/Chat');
@@ -8,14 +9,19 @@ const chatModel = require('../schemas/Chat');
 // set routes
 
 // get all chats involving a user
-router.get('/chats/:userRole/:userId', async (req, res) => {
+// use authMiddleware as this is a private route
+router.get('/chats/:userRole/:userId', authMiddleware, async (req, res) => {
   const userId = req.params.userId;
   const userRole = req.params.userRole;
 
   console.log(`Getting chats for user ${userId} with role ${userRole}`);
 
   try {
-    // get chats involving the user from the database
+    // Verify that the authenticated user matches the requested user ID
+    if (req.user.id !== userId) {   // && req.user.role !== 'admin'
+      return res.status(403).json({ message: "Unauthorized to access these chats" });
+    }
+
     const chats = await chatModel.getChats(userId);
     res.status(200).json({ chats: chats });
   }
@@ -25,7 +31,10 @@ router.get('/chats/:userRole/:userId', async (req, res) => {
   }
 });
 
-router.post('/chats/:chatId/messages', async (req, res) => {
+
+// send message to a chat
+// use authMiddleware as this is a private route
+router.post('/chats/:chatId/sendMessage', authMiddleware, async (req, res) => {
   const chatId = req.params.chatId;
   const user = req.body.user;
   const content = req.body.content;
@@ -33,10 +42,29 @@ router.post('/chats/:chatId/messages', async (req, res) => {
   console.log(`Adding message to chat ${chatId} from user ${user._id}`);
 
   try {
-    // add message to chat
     const chat = await chatModel.findById(chatId);
 
-    const sender = { id: user._id, fullName: user.fullName, role: user.role };
+    // Check if chat exists
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found" });
+    }
+
+    // Verify user participation in the chat
+    const isUserInChat = chat.participants.some(
+      participant => participant.id.toString() === req.user.id
+    );
+    if (!isUserInChat) {  //  && req.user.role !== 'admin'
+      return res.status(403).json({ message: "Unauthorized to send messages in this chat" });
+    }
+
+    // prepare sender info following participant schema
+    const sender = { 
+      id: req.user.id, 
+      fullName: req.user.fullName, 
+      role: req.user.role 
+    };
+
+    // add message
     const message = await chat.addMessage(content, sender);
     console.log(message);
 

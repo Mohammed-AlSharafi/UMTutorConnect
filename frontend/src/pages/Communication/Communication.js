@@ -4,35 +4,13 @@ import ChatArea from "../../components/ChatArea/ChatArea";
 import { useEffect, useState } from "react";
 
 import { getChats, sendMessage } from "../../proxies/chats";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Communication = () => {
-    // temporary logged in user state for testing
-    const [loggedInUser, setLoggedInUser] = useState({
-        "_id": "674ea3a9ed69105352b6470d",
-        "username": "ahmad_rahman",
-        "password": "password123",
-        "email": "ahmad.rahman@example.com",
-        "firstName": "Ahmad",
-        "lastName": "Rahman",
-        "bio": "Seasoned teacher in Physics and Engineering.",
-        "subjects": [
-            "Physics",
-            "Thermodynamics"
-        ],
-        "rate": 55,
-        "role": "Tutor",
-        "fullName": "Ahmad Rahman",
-    });
-    // const [loggedInUser, setLoggedInUser] = useState({
-    //     "_id": "674ea3a8ed69105352b64704",
-    //     "username": "aisha_yusof",
-    //     "password": "password123",
-    //     "email": "aisha.yusof@example.com",
-    //     "firstName": "Aisha",
-    //     "lastName": "Yusof",
-    //     "role": "Student",
-    //     "fullName": "Aisha Yusof",
-    // });
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
     const [chats, setChats] = useState(null);
     const [selectedChat, setSelectedChat] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -41,15 +19,28 @@ const Communication = () => {
     useEffect(() => {
         // get chats from backend
         async function fetchChats() {
-            const chats = await getChats(loggedInUser._id, loggedInUser.role);
-            console.log(chats);
-            if (chats) {
-                setChats(chats);
-                setSelectedChat(chats[0]);
+            try {
+                const chats = await getChats(user._id, user.role);
+                console.log(chats);
+                if (chats) {
+                    setChats(chats);
+                    setSelectedChat(chats[0]);
+                }
+            }
+            catch (error) {
+                if (error.response) {
+                    if (error.response.status === 403) {
+                        alert(`${error.response.data.message}`)
+                    }
+                }
+                else {
+                    
+                }
+                navigate("/");
             }
         }
         fetchChats();
-    }, [loggedInUser]);
+    }, [user, navigate]);
 
     useEffect(() => {
         if (chats) {
@@ -70,7 +61,7 @@ const Communication = () => {
     };
 
     const handleSendMessage = async (content) => {
-        const newMessage = await sendMessage(selectedChat._id, loggedInUser, content);
+        const newMessage = await sendMessage(selectedChat._id, user, content);
 
         console.log(newMessage);
 
@@ -107,7 +98,7 @@ const Communication = () => {
                     <ChatArea
                         chat={selectedChat}
                         onSendMessage={handleSendMessage}
-                        userId={loggedInUser._id}
+                        userId={user._id}
                     />
                 </>
             )}
