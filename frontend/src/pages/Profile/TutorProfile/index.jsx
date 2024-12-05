@@ -2,13 +2,13 @@ import ProfileImage from "../../../components/ProfileImage/ProfileImage";
 import styles from "./TutorProfile.module.css";
 
 export default function TutorProfile({ tutorInfo, img }) {
-    const { name, bio, subjects, rating, hourly_rate } = tutorInfo;
+    const { fullName, bio, subjects, rating, rate } = tutorInfo;
 
     return (
         <div className={styles.tutorProfileContainer}>
             <div className={styles.tutorProfile}>
                 <ProfileImage src={img} alt={"Profile image of the tutor"}/>
-                <h2>{name}</h2>
+                <h2>{fullName}</h2>
                 <button>Edit Profile</button>
             </div>
 
@@ -37,7 +37,7 @@ export default function TutorProfile({ tutorInfo, img }) {
             <div>
                 <h2>Hourly Rate</h2>
                 <div className={styles.hourlyRate}>
-                    <p>RM {hourly_rate}</p>
+                    <p>RM {rate}</p>
                 </div>
             </div>
 

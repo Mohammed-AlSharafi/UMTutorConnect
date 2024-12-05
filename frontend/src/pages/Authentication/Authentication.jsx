@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import styles from './Authentication.module.css'
 import { X } from 'lucide-react'
+import { authenticateTutor } from "../../proxies/tutors";
+import { authenticateStudent } from "../../proxies/students";
+import { useAuth } from "../../contexts/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // @Authentication
 const Authentication = () => {
+  const { login } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [isRegistering, setIsRegistering] = useState(false);
   const [isTutor, setIsTutor] = useState(false);
   const [subjects, setSubjects] = useState([]);
@@ -40,11 +48,59 @@ const Authentication = () => {
     setSubjects(subjects.filter(subject => subject !== subjectToRemove));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Here you would typically handle form submission
     console.log('Form submitted:', formValues);
-  };
+    if (!isRegistering) {
+      const username = formValues.username;
+      const password = formValues.password;
+
+      if (isTutor) {
+        // login as tutor
+        console.log('Tutor login');
+        try {
+          const response = await authenticateTutor(username, password);
+
+          login(response.data.user, response.data.token);
+          console.log("logged in user: ", response.data.user);
+
+          // navigate to previous location if available, otherwise go to home
+          const from = location.state?.from?.pathname || '/';
+          navigate(from, { replace: true });    // replace -> dont store /authentication in location history
+        }
+        catch (error) {
+          console.error(error);
+          // display error message if status code is 401
+          if (error.response?.status === 401) {
+            alert(`${error.response.data.message}`);  // using alert for now
+          }
+        }
+      }
+      else {
+        // login as student
+        console.log('Tutor login');
+        try {
+          const response = await authenticateStudent(username, password);
+
+          login(response.data.user, response.data.token);
+          console.log("logged in user: ", response.data.user);
+
+          // navigate to previous location if available, otherwise go to home
+          const from = location.state?.from?.pathname || '/';
+          navigate(from, { replace: true });    // replace -> dont store /authentication in location history
+        }
+        catch (error) {
+          console.error(error);
+          // display error message if status code is 401
+          if (error.response?.status === 401) {
+            alert(`${error.response.data.message}`);  // using alert for now
+          }
+        }
+      }
+    }
+  }
+
 
   return (
     <main className={styles.authContainer}>
@@ -103,20 +159,21 @@ const Authentication = () => {
                       required
                     />
                   </div>
-                  {/* @RoleToggle */}
-                  <div className={styles.roleToggle}>
-                    <label className={styles.switch}>
-                      <input
-                        type="checkbox"
-                        checked={isTutor}
-                        onChange={handleRoleToggle}
-                      />
-                      <span className={styles.slider}></span>
-                    </label>
-                    <span className={styles.roleLabel}>I want to be a tutor</span>
-                  </div>
                 </>
               )}
+              {/* @RoleToggle */}
+              <div className={styles.roleToggle}>
+                <label className={styles.switch}>
+                  <input
+                    type="checkbox"
+                    checked={isTutor}
+                    onChange={handleRoleToggle}
+                  />
+                  <span className={styles.slider}></span>
+                </label>
+                {isRegistering && <span className={styles.roleLabel}>I want to be a tutor</span>}
+                {!isRegistering && <span className={styles.roleLabel}>I am a tutor</span>}
+              </div>
               <input
                 type="text"
                 id="username"

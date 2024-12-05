@@ -2,7 +2,11 @@ import axiosInstance from "./axiosHandler";
 
 const getChats = async (userId, userRole) => {
   try {
-    const response = await axiosInstance.get(`/chatApi/chats/${userRole}/${userId}`);
+    const response = await axiosInstance.get(`/chatApi/chats/${userRole}/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.getItem("token")}`
+      }
+    });
     return response.data.chats;
   }
   catch (error) {
@@ -19,9 +23,13 @@ const getChats = async (userId, userRole) => {
 
 const sendMessage = async (chatId, user, content) => {
   try {
-    const response = await axiosInstance.post(`/chatApi/chats/${chatId}/messages`, {
+    const response = await axiosInstance.post(`/chatApi/chats/${chatId}/sendMessage`, {
       user: user,
       content: content,
+    }, {
+      headers: {
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`
+      }
     });
 
     return response.data.message;
