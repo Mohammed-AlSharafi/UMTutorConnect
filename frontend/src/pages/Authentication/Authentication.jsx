@@ -5,6 +5,8 @@ import { authenticateTutor } from "../../proxies/tutors";
 import { authenticateStudent } from "../../proxies/students";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { registerStudent } from "../../proxies/students.js";  // Create this function in your proxy folder
+
 
 // @Authentication
 const Authentication = () => {
@@ -24,6 +26,7 @@ const Authentication = () => {
     password: "",
     confirmPassword: "",
     bio: "",
+    role: "Student"
   });
 
   const handleToggle = () => setIsRegistering(!isRegistering);
@@ -52,6 +55,28 @@ const Authentication = () => {
     e.preventDefault();
     // Here you would typically handle form submission
     console.log('Form submitted:', formValues);
+
+    if(isRegistering && !isTutor){
+    alert(`
+    First Name: ${formValues.firstName}
+    Last Name: ${formValues.lastName}
+    Username: ${formValues.username}
+    Email: ${formValues.email}
+    Password: ${formValues.password}
+    Role: ${formValues.role}
+  `);
+      const { firstName, lastName, username, email, password } = formValues;
+      try {
+      const response = await registerStudent({ firstName, lastName, username, email, password });
+      alert("Student registered successfully!");
+      console.log(response);  // Log the response for debugging
+    } catch (error) {
+      console.error(error);
+      alert("Registration failed. Please try again.");
+    }
+
+
+}
     if (!isRegistering) {
       const username = formValues.username;
       const password = formValues.password;
