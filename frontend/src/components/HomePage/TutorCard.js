@@ -1,4 +1,7 @@
-const TutorCard = ({ name, subject, rate , img}) => {
+const TutorCard = ({ name, subjects, rate, img}) => {
+	console.log('hehehe', subjects);
+	const subjectList = Array.isArray(subjects) ? subjects.join(', ') : subjects;
+	
 	return (
 		<div
 			style={{
@@ -16,7 +19,7 @@ const TutorCard = ({ name, subject, rate , img}) => {
 				style={{ borderRadius: "10px", width: "100%", maxHeight: "220px" }}
 			/>
 			<h3>{name}</h3>
-			<p>{subject}</p>
+			<p>{subjectList}</p>
 			<h4 style={{textAlign: "right" , paddingRight: "20px"}}>{rate} RM/H</h4>
 		</div>
 	);

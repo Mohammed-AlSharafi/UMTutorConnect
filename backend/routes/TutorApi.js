@@ -6,6 +6,14 @@ const bcrypt = require("bcryptjs");
 // import tutor model
 const tutorModel = require('../schemas/Tutor');
 
+// Dummy data for top tutors
+const topTutors = [
+  { fullName: "John Doe", subjects: "Data Structures", rate: 20, img: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { fullName: "Jane Smith", subjects: "Algorithms", rate: 25, img: "https://plus.unsplash.com/premium_photo-1658506795539-8c3e055c960c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"},
+  { fullName: "Chris Lee", subjects: "Machine Learning", rate: 30, img: "https://images.unsplash.com/photo-1495603889488-42d1d66e5523?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+
+// 	You can add more here
+];
 
 // set routes
 
@@ -14,6 +22,41 @@ router.get("/", async (req, res) => {
   try {
     const items = await tutorModel.find();
     res.json(items);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// get top tutors
+router.get("/topTutors", (req, res) => {
+  try {
+    res.status(200).json(topTutors);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message});
+  }
+});
+
+// search tutors by subject
+router.get("/search", async (req, res) => {
+  try {
+    const { subject } = req.query;
+
+    // subject is blank
+    if (!subject) {
+      return res.status(400).json({ error: 'Subject is required' });
+    }
+
+    // find tutors who teach given subject
+    const tutors = await tutorModel.find({subjects: { $in: [subject]}});
+
+    // no tutor for subject
+    if (tutors.length === 0) {
+      return res.status(404).json({ message: 'No tutors found for this subject'})
+    }
+
+    res.status(200).json(tutors);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
