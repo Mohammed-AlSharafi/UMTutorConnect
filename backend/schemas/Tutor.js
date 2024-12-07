@@ -43,6 +43,7 @@ const tutorSchema = new mongoose.Schema({
     rate: {
         type: Number,
         required: true,
+        default: 10
     },
     
     role: {
