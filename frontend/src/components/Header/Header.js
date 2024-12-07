@@ -11,7 +11,7 @@ function Header() {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <header className={styles.header}>
+    isAuthenticated() && <header className={styles.header}>
       <a href="/" className={styles.logoBlock}>
         <div className={styles.logo}>
           <img src={gradHat} alt="UMTutorConnect Logo" className={styles.logoImage} />
