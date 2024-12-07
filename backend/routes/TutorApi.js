@@ -6,6 +6,45 @@ const bcrypt = require("bcryptjs");
 // import tutor model
 const tutorModel = require('../schemas/Tutor');
 
+// Register Tutor (POST)
+router.post("/register", async (req, res) => {
+  try {
+    const { firstName, lastName, username, email, password, bio, subjects, rate } = req.body;
+
+    // Check if the tutor already exists
+    const existingTutor = await tutorModel.findOne({ username });
+    if (existingTutor) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    // Hash the password before saving
+    //const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new tutor
+    const newTutor = new tutorModel({
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      bio,
+      subjects,
+      rate
+    });
+
+     // Save the tutor to the database
+    await newTutor.save();
+
+    
+
+    // Send success response
+    res.status(201).json({ message: "Tutor registered successfully", tutor: newTutor });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+});
+
 // Dummy data for top tutors
 const topTutors = [
   { fullName: "John Doe", subjects: "Data Structures", rate: 20, img: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },

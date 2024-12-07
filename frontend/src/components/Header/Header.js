@@ -4,12 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import gradHat from '../../images/grad_hat.png';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Header() {
   const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
   return (
-    <header className={styles.header}>
+    isAuthenticated() && <header className={styles.header}>
       <a href="/" className={styles.logoBlock}>
         <div className={styles.logo}>
           <img src={gradHat} alt="UMTutorConnect Logo" className={styles.logoImage} />
@@ -46,6 +48,9 @@ function Header() {
         <input type="text" placeholder="What would you like to learn?" className={styles.searchInput} />
         <button className={styles.searchButton}><FontAwesomeIcon icon={faSearch} /></button>
       </div>
+      {isAuthenticated() && (
+        <button className={styles.logoutButton} onClick={logout}>Logout</button>
+      )}
     </header>
   );
 }

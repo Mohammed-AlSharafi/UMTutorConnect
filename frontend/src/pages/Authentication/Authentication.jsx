@@ -5,6 +5,9 @@ import { authenticateTutor } from "../../proxies/tutors";
 import { authenticateStudent } from "../../proxies/students";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { registerStudent } from "../../proxies/students.js";
+import { registerTutor } from "../../proxies/tutors.js";  // Create this function in your proxy folder
+
 
 // @Authentication
 const Authentication = () => {
@@ -24,6 +27,7 @@ const Authentication = () => {
     password: "",
     confirmPassword: "",
     bio: "",
+    role: "Student"
   });
 
   const handleToggle = () => setIsRegistering(!isRegistering);
@@ -52,6 +56,74 @@ const Authentication = () => {
     e.preventDefault();
     // Here you would typically handle form submission
     console.log('Form submitted:', formValues);
+
+    if(isRegistering){
+
+      if(!isTutor){
+    
+      const { firstName, lastName, username, email, password } = formValues;
+      try {
+      const response = await registerStudent({ firstName, lastName, username, email, password });
+      alert("Student registered successfully!");
+      console.log(response);  // Log the response for debugging
+    } catch (error) {
+      console.error(error);
+      alert("Registration failed. Please try again.");
+    }
+
+
+  }
+
+  if (isTutor) {
+  const { firstName, lastName, username, email, password, bio } = formValues;
+  try {
+    console.log('Registration Data:', { 
+      firstName, 
+      lastName, 
+      username, 
+      email, 
+      password, 
+      bio,
+      subjects 
+    });
+
+    const response = await registerTutor({ 
+      firstName, 
+      lastName, 
+      username, 
+      email, 
+      password, 
+      bio,
+      subjects  
+    });
+    alert("Tutor registered successfully!");
+    console.log(response);  // Log the full response
+  } catch (error) {
+    console.error('Full Error Object:', error);
+    
+    // More detailed error logging
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      console.error('Error Response Data:', error.response.data);
+      console.error('Error Response Status:', error.response.status);
+      console.error('Error Response Headers:', error.response.headers);
+      
+      // Show more specific error message from backend
+      alert(error.response.data.message || "Tutor Registration failed.");
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('Error Request:', error.request);
+      alert("No response received from server. Please check your network connection.");
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error('Error Message:', error.message);
+      alert("An error occurred during registration. " + error.message);
+    }
+  }
+}
+
+
+}
     if (!isRegistering) {
       const username = formValues.username;
       const password = formValues.password;

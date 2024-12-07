@@ -69,3 +69,15 @@
   cursor: pointer;
 }
 
+.logoutButton {
+  background-color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  border: none;          
+  outline: none;
+  position: relative;
+  left: -30px;
+  cursor: pointer;
+}
+
