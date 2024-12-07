@@ -30,7 +30,7 @@ export default function TutorProfile({ tutorInfo, img }) {
                 <h2>Reviews</h2>
                 <div className={styles.ratingContainer}>
                     <h3 className={styles.rating}>{rating}</h3>
-                    <h3>Rating</h3>
+                    <h3>--</h3>
                 </div>
             </div>
 
@@ -41,7 +41,7 @@ export default function TutorProfile({ tutorInfo, img }) {
                 </div>
             </div>
 
-            <div>
+            <div className={styles.contactSection}>
                 <h2>Contact Me:</h2>
                 <button>Message</button>
             </div>

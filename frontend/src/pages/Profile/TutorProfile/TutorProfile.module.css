@@ -15,6 +15,12 @@
     gap: 0.5rem;
 }
 
+.contactSection{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .ratingContainer {
     text-align: center;
 }

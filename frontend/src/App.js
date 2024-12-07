@@ -9,27 +9,39 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useLocation,
 } from "react-router-dom";
 import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
+
+function AppContent() {
+  const location = useLocation();
+
+  // Determine if the current route is "/authentication"
+  const isAuthPage = location.pathname === '/authentication';
+
+  return (
+    <div className={`${styles.app} ${!isAuthPage ? styles.withPadding : ''}`}>
+      <Routes>
+        {/* public routes */}
+        <Route path="/authentication" element={<Authentication />} />
+
+        {/* private routes */}
+        <Route element={<PrivateRoute />} >
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/communication" element={<Communication />} />
+        </Route>
+      </Routes>
+    </div>
+  );
+}
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Header />
-        <div className={styles.app}>
-          <Routes>
-            {/* public routes */}
-            <Route path="/authentication" element={<Authentication />} />
-
-            {/* private routes */}
-            <Route element={<PrivateRoute />} >
-              <Route path="/" element={<Home />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/communication" element={<Communication />} />
-            </Route>
-          </Routes>
-        </div>
+        <AppContent />
       </Router>
     </AuthProvider>
   );

@@ -26,12 +26,13 @@
 }
 
 .button {
+    width: 50px;
     margin-left: 10px;
-    padding: 5px;
+    padding: 10px;
     border-radius: 15px;
     border: none;
     background: #007bff;
     color: #fff;
-    font-size: 36px;
+    font-size: 24px;
     cursor: pointer;
 }
