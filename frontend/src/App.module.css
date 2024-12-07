@@ -1,10 +1,9 @@
 .app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #D1D5DB;
-  }
+  margin-top: 0;
+  background-color: #D1D5DB;
+  height: 95vh;
+}
 
-  .header{
-    position: fixed;
-  }
+.withPadding {
+  margin-top: 50px;
+}

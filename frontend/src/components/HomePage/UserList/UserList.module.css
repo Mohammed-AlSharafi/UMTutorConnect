@@ -1,0 +1,21 @@
+.UserList {
+  background: #f9f9f9;
+  padding: 40px;
+  height: 100vh;
+}
+
+.Title {
+  text-align: left;
+  margin-left: 90px;
+  font-size: 20px;
+}
+
+.listContainer {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  background: #f9f9f9;
+  padding: 5px;
+}

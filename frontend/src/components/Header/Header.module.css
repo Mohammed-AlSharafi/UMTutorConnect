@@ -1,41 +1,69 @@
 .header {
+  position: fixed;
+  width: 100%;
   background-color: #545B9E;
   color: white;
-  padding: 0.5rem;
+  top: 0;
+  z-index: 1000;
+}
+
+.headerContent {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  padding: 0.5rem 20px;
+  margin: 0 auto;
+}
+
+.logoBlock {
+  text-decoration: none;
+  color: white;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.1rem;
-}
-
-.logoBlock{
-  text-decoration: none;
-  color: white; 
+  gap: 0.5rem;
 }
 
 .logoImage {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
 }
 
 .logoText {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
+}
+
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .nav {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .navLink {
   color: white;
   text-decoration: none;
+  font-size: 1rem;
+  white-space: nowrap;
 }
 
 .active {
@@ -48,7 +76,6 @@
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 0.5rem;
   padding: 0.5rem;
-  margin-right: 1rem;
 }
 
 .searchInput {
@@ -56,6 +83,7 @@
   border: none;
   color: white;
   outline: none;
+  width: 200px;
 }
 
 .searchInput::placeholder {
@@ -71,13 +99,69 @@
 
 .logoutButton {
   background-color: #ffffff;
+  color: #545B9E;
   padding: 0.5rem 1rem;
   border-radius: 12px;
   font-size: 1rem;
-  border: none;          
+  border: none;
   outline: none;
-  position: relative;
-  left: -30px;
   cursor: pointer;
+  white-space: nowrap;
+}
+
+@media (max-width: 992px) {
+  .headerContent {
+    flex-wrap: wrap;
+  }
+
+  .navContainer {
+    order: 3;
+    width: 100%;
+    margin-top: 1rem;
+    justify-content: space-between;
+  }
+
+  .search {
+    order: 2;
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 992px) {
+  .menuToggle {
+    display: block;
+  }
+
+  .navContainer {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .navOpen {
+    display: flex;
+  }
+
+  .nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search {
+    width: 100%;
+    margin-top: 1rem;
+    order: 2;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .logoutButton {
+    width: 100%;
+    margin-top: 1rem;
+    order: 3;
+  }
 }
 
