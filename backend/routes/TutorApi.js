@@ -6,6 +6,45 @@ const bcrypt = require("bcryptjs");
 // import tutor model
 const tutorModel = require('../schemas/Tutor');
 
+// Register Tutor (POST)
+router.post("/register", async (req, res) => {
+  try {
+    const { firstName, lastName, username, email, password, bio, subjects, rate } = req.body;
+
+    // Check if the tutor already exists
+    const existingTutor = await tutorModel.findOne({ username });
+    if (existingTutor) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    // Hash the password before saving
+    //const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new tutor
+    const newTutor = new tutorModel({
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      bio,
+      subjects,
+      rate
+    });
+
+     // Save the tutor to the database
+    await newTutor.save();
+
+    
+
+    // Send success response
+    res.status(201).json({ message: "Tutor registered successfully", tutor: newTutor });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+});
+
 
 // set routes
 
