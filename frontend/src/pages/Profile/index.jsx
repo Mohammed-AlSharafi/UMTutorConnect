@@ -11,7 +11,7 @@ export default function Profile() {
     return (
         <div className={styles.profileContainer}>
             <div className={styles.profileDetailsContainer}>
-                {user.role === "Student" ? <StudentProfile img={studentImg} /> : <TutorProfile tutorInfo={user} img={tutorImg}/>}
+                {user.role === "Student" ? <StudentProfile studentInfo={user} img={studentImg} /> : <TutorProfile tutorInfo={user} img={tutorImg}/>}
             </div>
         </div>
     );
