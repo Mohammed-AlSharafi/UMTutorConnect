@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import styles from './SearchBar.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { fetchTutorsBySubject } from '../../proxies/tutors';
 
 const SearchBar = ({ onSearch }) => {
@@ -37,8 +39,8 @@ const SearchBar = ({ onSearch }) => {
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
 				/>
-				<button className={styles.button} onClick={handleSearch}>
-					🔍
+				<button className={styles.button}>
+					<FontAwesomeIcon icon={faSearch} />
 				</button>
 			</div>
 		</div>

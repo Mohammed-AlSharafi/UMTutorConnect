@@ -233,19 +233,6 @@ const Authentication = () => {
                   </div>
                 </>
               )}
-              {/* @RoleToggle */}
-              <div className={styles.roleToggle}>
-                <label className={styles.switch}>
-                  <input
-                    type="checkbox"
-                    checked={isTutor}
-                    onChange={handleRoleToggle}
-                  />
-                  <span className={styles.slider}></span>
-                </label>
-                {isRegistering && <span className={styles.roleLabel}>I want to be a tutor</span>}
-                {!isRegistering && <span className={styles.roleLabel}>I am a tutor</span>}
-              </div>
               <input
                 type="text"
                 id="username"
@@ -329,6 +316,19 @@ const Authentication = () => {
                   </div>
                 </>
               )}
+              {/* @RoleToggle */}
+              <div className={styles.roleToggle}>
+                <label className={styles.switch}>
+                  <input
+                    type="checkbox"
+                    checked={isTutor}
+                    onChange={handleRoleToggle}
+                  />
+                  <span className={styles.slider}></span>
+                </label>
+                {isRegistering && <span className={styles.roleLabel}>I want to be a tutor</span>}
+                {!isRegistering && <span className={styles.roleLabel}>I am a tutor</span>}
+              </div>
               <button type="submit" className={styles.submitButton}>
                 {isRegistering ? "Register" : "Login"}
               </button>

@@ -1,11 +1,14 @@
 import styles from './Home.module.css'
 import SearchBar from "../../components/HomePage/SearchBar";
-import TutorList from "../../components/HomePage/TutorList";
+import UserList from "../../components/HomePage/UserList/UserList";
+import { useAuth } from "../../contexts/AuthContext";
 import { useEffect, useState } from 'react';
 import { fetchTopTutors } from '../../proxies/tutors';
 
 
 export default function Home() {
+
+	const { user } = useAuth();
 	const [tutors, setTutors] = useState([]);
 	const [title, setTitle] = useState("Tutor List");
 	// const [subject, setSubject] = useState("");
@@ -43,9 +46,9 @@ export default function Home() {
 	};
 
 	return (
-		<div>
-			<SearchBar onSearch={handleSearchResults}/>
-			<TutorList tutors={tutors} title={title}/>
+		<div className={styles.container}>
+			{user.role === "Student" && <SearchBar />}
+			<UserList />
 		</div>
 	)
 
