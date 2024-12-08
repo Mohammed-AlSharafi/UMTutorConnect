@@ -53,6 +53,7 @@ const fetchTopTutors = async () => {
 }
 const fetchTutorsBySubject = async(subject) => {
   try {
+    console.log("Fetching tutors for subject: ", subject);
     const response = await axiosInstance.get(`tutorApi/search?subject=${encodeURIComponent(subject)}`);
     console.log("Tutors fetched: ", response.data);
     return response.data;

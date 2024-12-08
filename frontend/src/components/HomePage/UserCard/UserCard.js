@@ -1,14 +1,13 @@
 import React from "react";
 import styles from "./UserCard.module.css";
 
-const UserCard = ({ name, subject, rate, img, role }) => {
+const UserCard = ({ name, subjects, rate, img, role }) => {
   return (
     <div className={styles.userCard}>
-      <img className={styles.image} src={img} alt="Tutor Image" />
-      <h3>{name}</h3>
+      <h3 className={styles.userName}>{name}</h3>
       {role === "Student" && (
         <>
-          <p>{subject}</p>
+          <p className={styles.subjects}>{Array.isArray(subjects) ? subjects.join(", ") : "No subjects listed"}</p>
           <h4 className={styles.rate}>{rate} RM/H</h4>
         </>
       )}

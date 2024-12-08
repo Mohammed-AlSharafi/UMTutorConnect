@@ -9,11 +9,6 @@ const SearchBar = ({ onSearch }) => {
 
 	const handleSearch = async () => {
 		try {
-			
-			if (!searchQuery.trim()) {
-				alert("Please enter a subject to search");
-				return;
-			}
 			const tutors = await fetchTutorsBySubject(searchQuery);
 			console.log("Fetched tutors: ", tutors);
 			onSearch(tutors, searchQuery);
@@ -39,7 +34,7 @@ const SearchBar = ({ onSearch }) => {
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
 				/>
-				<button className={styles.button}>
+				<button className={styles.button} onClick={handleSearch}>
 					<FontAwesomeIcon icon={faSearch} />
 				</button>
 			</div>

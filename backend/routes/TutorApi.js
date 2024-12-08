@@ -87,20 +87,22 @@ router.get("/search", async (req, res) => {
       return res.status(400).json({ error: 'Subject is required' });
     }
 
-    // find tutors who teach given subject
-    const tutors = await tutorModel.find({subjects: { $in: [subject]}});
+    // Use regex for case-insensitive and substring matching
+    const tutors = await tutorModel.find({ subjects: { $regex: subject, $options: 'i' } });
 
     // no tutor for subject
     if (tutors.length === 0) {
-      return res.status(404).json({ message: 'No tutors found for this subject'})
+      console.log("No tutors found for subject: ", subject);
+      return res.status(404).json({ message: 'No tutors found for this subject' });
     }
-
+    console.log("Tutors found for subject: ", subject, tutors);
     res.status(200).json(tutors);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
+
 
 // get tutor by id
 router.get("/:id", async (req, res) => {
