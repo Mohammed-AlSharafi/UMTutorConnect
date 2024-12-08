@@ -37,5 +37,34 @@ const authenticateTutor = async (username, password) => {
     throw error;
   }
 }
+const fetchTopTutors = async () => {
+  try {
+    const response = await axiosInstance.get("tutorApi/topTutors");
+    console.log("Top tutors fetched: ", response.data);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error fetching top tutors:", error.response.data);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+}
+const fetchTutorsBySubject = async(subject) => {
+  try {
+    console.log("Fetching tutors for subject: ", subject);
+    const response = await axiosInstance.get(`tutorApi/search?subject=${encodeURIComponent(subject)}`);
+    console.log("Tutors fetched: ", response.data);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error fetching tutors:", error.response.data);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+}
 
-export { authenticateTutor };
+export { authenticateTutor, fetchTopTutors, fetchTutorsBySubject };
