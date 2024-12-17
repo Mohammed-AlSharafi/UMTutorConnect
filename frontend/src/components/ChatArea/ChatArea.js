@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './ChatArea.module.css';
+import { Link } from 'react-router-dom';
 
 function ChatArea({ chat, onSendMessage, userId }) {
   const [message, setMessage] = useState('');
@@ -22,7 +23,9 @@ function ChatArea({ chat, onSendMessage, userId }) {
   return (
     <div className={styles.chatArea}>
       <div className={styles.chatHeader}>
-        <span className={styles.name}>{chat.name}</span>
+        <Link to={`/profile/${chat.otherParticipant.role}/${chat.otherParticipant.id}`}>
+          <span className={styles.name}>{chat.fullName}</span>
+        </Link>
       </div>
       <div className={styles.messages}>
         {chat.messages.map((message, index) => (
@@ -35,9 +38,9 @@ function ChatArea({ chat, onSendMessage, userId }) {
         <div ref={messagesEndRef} />
       </div>
       <form className={styles.inputArea} onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          placeholder="Type a message" 
+        <input
+          type="text"
+          placeholder="Type a message"
           className={styles.input}
           value={message}
           onChange={(e) => setMessage(e.target.value)}

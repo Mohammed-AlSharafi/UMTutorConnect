@@ -32,10 +32,8 @@ router.post("/register", async (req, res) => {
       rate
     });
 
-     // Save the tutor to the database
+    // Save the tutor to the database
     await newTutor.save();
-
-    
 
     // Send success response
     res.status(201).json({ message: "Tutor registered successfully", tutor: newTutor });
@@ -47,11 +45,11 @@ router.post("/register", async (req, res) => {
 
 // Dummy data for top tutors
 const topTutors = [
-  { fullName: "John Doe", subjects: "Data Structures", rate: 20, img: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { fullName: "Jane Smith", subjects: "Algorithms", rate: 25, img: "https://plus.unsplash.com/premium_photo-1658506795539-8c3e055c960c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"},
-  { fullName: "Chris Lee", subjects: "Machine Learning", rate: 30, img: "https://images.unsplash.com/photo-1495603889488-42d1d66e5523?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+  { fullName: "John Doe", role: "Tutor", subjects: "Data Structures", rate: 20, img: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { fullName: "Jane Smith", role: "Tutor", subjects: "Algorithms", rate: 25, img: "https://plus.unsplash.com/premium_photo-1658506795539-8c3e055c960c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { fullName: "Chris Lee", role: "Tutor", subjects: "Machine Learning", rate: 30, img: "https://images.unsplash.com/photo-1495603889488-42d1d66e5523?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
 
-// 	You can add more here
+  // 	You can add more here
 ];
 
 // set routes
@@ -73,7 +71,7 @@ router.get("/topTutors", (req, res) => {
     res.status(200).json(topTutors);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message});
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
@@ -108,7 +106,7 @@ router.get("/search", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const item = await tutorModel.findById(req.params.id);
-    res.status(200).json(item);
+    res.status(200).json({ user: item });
   }
   catch (error) {
     console.error(error);

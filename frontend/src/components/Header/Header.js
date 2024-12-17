@@ -8,7 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 function Header() {
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -36,8 +36,8 @@ function Header() {
                 Home
               </Link>
               <Link
-                to="/profile"
-                className={`${styles.navLink} ${location.pathname === '/profile' ? styles.active : ''}`}
+                to={`/profile/${user.role}/${user._id}`}
+                className={`${styles.navLink} ${location.pathname === `/profile` ? styles.active : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Profile

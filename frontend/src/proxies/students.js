@@ -1,5 +1,23 @@
 import axiosInstance from "./axiosHandler";
 
+
+const getStudentById = async (studentId) => {
+  try {
+    const response = await axiosInstance.get(`/studentApi/${studentId}`);
+    console.log("Student data: ", response);
+    return response;
+  }
+  catch (error) {
+    if (error.response) {
+      console.error("Error response:", error.response);
+    }
+    else {
+      console.error(error);
+    }
+    throw error;
+  }
+};
+
 const authenticateStudent = async (username, password) => {
   try {
     const response = await axiosInstance.post("/studentApi/authenticate", {
@@ -21,10 +39,6 @@ const authenticateStudent = async (username, password) => {
   }
 }
 
-export { authenticateStudent };
-
-
-
 const registerStudent = async (studentData) => {
   try {
     const response = await axiosInstance.post("/studentApi/register", studentData);
@@ -40,4 +54,4 @@ const registerStudent = async (studentData) => {
   }
 };
 
-export { registerStudent };
+export { getStudentById, authenticateStudent, registerStudent };
