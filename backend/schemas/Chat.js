@@ -87,6 +87,7 @@ chatSchema.statics.getChats = async function (userId) {
     return {
       ...chat.toObject(), // Convert Mongoose document to plain JS object
       fullName: otherParticipant?.fullName || "Unknown", // Add 'name' field
+      otherParticipant: otherParticipant,
     };
   });
 

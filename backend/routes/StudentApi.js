@@ -30,10 +30,8 @@ router.post("/register", async (req, res) => {
       password
     });
 
-     // Save the student to the database
+    // Save the student to the database
     await newStudent.save();
-
-    
 
     // Send success response
     res.status(201).json({ message: "Student registered successfully", student: newStudent });
@@ -64,7 +62,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const item = await studentModel.findById(req.params.id);
-    res.status(200).json(item);
+    res.status(200).json({ user: item });
   }
   catch (error) {
     console.error(error);

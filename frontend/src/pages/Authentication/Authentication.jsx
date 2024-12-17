@@ -57,73 +57,73 @@ const Authentication = () => {
     // Here you would typically handle form submission
     console.log('Form submitted:', formValues);
 
-    if(isRegistering){
+    if (isRegistering) {
 
-      if(!isTutor){
-    
-      const { firstName, lastName, username, email, password } = formValues;
-      try {
-      const response = await registerStudent({ firstName, lastName, username, email, password });
-      alert("Student registered successfully!");
-      console.log(response);  // Log the response for debugging
-    } catch (error) {
-      console.error(error);
-      alert("Registration failed. Please try again.");
+      if (!isTutor) {
+
+        const { firstName, lastName, username, email, password } = formValues;
+        try {
+          const response = await registerStudent({ firstName, lastName, username, email, password });
+          alert("Student registered successfully!");
+          console.log(response);  // Log the response for debugging
+        } catch (error) {
+          console.error(error);
+          alert("Registration failed. Please try again.");
+        }
+
+
+      }
+
+      if (isTutor) {
+        const { firstName, lastName, username, email, password, bio } = formValues;
+        try {
+          console.log('Registration Data:', {
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
+            bio,
+            subjects
+          });
+
+          const response = await registerTutor({
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
+            bio,
+            subjects
+          });
+          alert("Tutor registered successfully!");
+          console.log(response);  // Log the full response
+        } catch (error) {
+          console.error('Full Error Object:', error);
+
+          // More detailed error logging
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            console.error('Error Response Data:', error.response.data);
+            console.error('Error Response Status:', error.response.status);
+            console.error('Error Response Headers:', error.response.headers);
+
+            // Show more specific error message from backend
+            alert(error.response.data.message || "Tutor Registration failed.");
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Error Request:', error.request);
+            alert("No response received from server. Please check your network connection.");
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error Message:', error.message);
+            alert("An error occurred during registration. " + error.message);
+          }
+        }
+      }
+
+
     }
-
-
-  }
-
-  if (isTutor) {
-  const { firstName, lastName, username, email, password, bio } = formValues;
-  try {
-    console.log('Registration Data:', { 
-      firstName, 
-      lastName, 
-      username, 
-      email, 
-      password, 
-      bio,
-      subjects 
-    });
-
-    const response = await registerTutor({ 
-      firstName, 
-      lastName, 
-      username, 
-      email, 
-      password, 
-      bio,
-      subjects  
-    });
-    alert("Tutor registered successfully!");
-    console.log(response);  // Log the full response
-  } catch (error) {
-    console.error('Full Error Object:', error);
-    
-    // More detailed error logging
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      console.error('Error Response Data:', error.response.data);
-      console.error('Error Response Status:', error.response.status);
-      console.error('Error Response Headers:', error.response.headers);
-      
-      // Show more specific error message from backend
-      alert(error.response.data.message || "Tutor Registration failed.");
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error('Error Request:', error.request);
-      alert("No response received from server. Please check your network connection.");
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error('Error Message:', error.message);
-      alert("An error occurred during registration. " + error.message);
-    }
-  }
-}
-
-
-}
     if (!isRegistering) {
       const username = formValues.username;
       const password = formValues.password;
@@ -139,7 +139,12 @@ const Authentication = () => {
 
           // navigate to previous location if available, otherwise go to home
           const from = location.state?.from?.pathname || '/';
-          navigate(from, { replace: true });    // replace -> dont store /authentication in location history
+          if (!from.includes("/profile")) {
+            navigate(from, { replace: true });    // replace -> dont store /authentication in location history
+          }
+          else {
+            navigate("/", { replace: true });
+          }
         }
         catch (error) {
           console.error(error);
