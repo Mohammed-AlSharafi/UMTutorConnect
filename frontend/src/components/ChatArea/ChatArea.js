@@ -27,15 +27,17 @@ function ChatArea({ chat, onSendMessage, userId }) {
           <span className={styles.name}>{chat.fullName}</span>
         </Link>
       </div>
-      <div className={styles.messages}>
-        {chat.messages.map((message, index) => (
-          <div key={index} className={`${styles.message} ${message.sender.id === userId ? styles.tutor : ''}`}>
-            <div className={styles.messageContent}>
-              {message.content}
+      <div className={styles.messagesWrapper}>
+        <div className={styles.messages}>
+          {chat.messages.map((message, index) => (
+            <div key={index} className={`${styles.message} ${message.sender.id === userId ? styles.tutor : ''}`}>
+              <div className={styles.messageContent}>
+                {message.content}
+              </div>
             </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
       <form className={styles.inputArea} onSubmit={handleSubmit}>
         <input
@@ -52,4 +54,3 @@ function ChatArea({ chat, onSendMessage, userId }) {
 }
 
 export default ChatArea;
-
