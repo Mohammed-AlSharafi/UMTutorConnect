@@ -10,13 +10,15 @@ import {
   Routes,
   Route,
   useLocation,
+  link,
 } from "react-router-dom";
 import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
 
+import EditProfile from './pages/Profile/EditProfile';
+
+// Add EditProfile route inside <PrivateRoute>
 function AppContent() {
   const location = useLocation();
-
-  // Determine if the current route is "/authentication"
   const isAuthPage = location.pathname === '/authentication';
 
   return (
@@ -26,9 +28,10 @@ function AppContent() {
         <Route path="/authentication" element={<Authentication />} />
 
         {/* private routes */}
-        <Route element={<PrivateRoute />} >
+        <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/communication" element={<Communication />} />
         </Route>
       </Routes>

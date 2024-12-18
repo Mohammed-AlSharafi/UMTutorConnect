@@ -29,9 +29,9 @@ const tutorSchema = new mongoose.Schema({
             return this.firstName + " " + this.lastName;
         },
     },
-    // profilePicture: {
-    //     type: String,
-    // },
+    profilePicture: {
+        type: String,
+    },
     bio: {
         type: String,
         required: true,
@@ -59,10 +59,10 @@ const tutorSchema = new mongoose.Schema({
     //     type: Date,
     //     default: Date.now,
     // },
-    // dateUpdated: {
-    //     type: Date,
-    //     default: Date.now,
-    // },
+    dateUpdated: {
+        type: Date,
+        default: Date.now,
+    },
 })
 
 const model = mongoose.model("Tutor", tutorSchema);

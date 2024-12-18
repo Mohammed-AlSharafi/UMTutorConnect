@@ -29,12 +29,16 @@ const studentSchema = new mongoose.Schema({
             return this.firstName + " " + this.lastName;
         },
     },
-    // profilePicture: {
-    //     type: String,
-    // },
+    profilePicture: {
+        type: String,
+    },
     role: {
         type: String,
         default: "Student",
+        required: true,
+    },
+    course: {
+        type: [String], // Array of strings
         required: true,
     },
     // enabled: {
@@ -45,11 +49,14 @@ const studentSchema = new mongoose.Schema({
     //     type: Date,
     //     default: Date.now,
     // },
-    // dateUpdated: {
-    //     type: Date,
-    //     default: Date.now,
-    // },
+    dateUpdated: {
+        type: Date,
+        default: Date.now,
+    },
 });
+
+
+
 
 const model = mongoose.model("Student", studentSchema);
 module.exports = model;

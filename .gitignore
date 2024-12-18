@@ -1,8 +1,18 @@
-# general
+# Ignore the node_modules folder
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore all .env files
 *.env
 
-# frontend
-frontend/node_modules/
+# Ignore all files in the tmp directory
+tmp/
 
-# backend
-backend/node_modules/
+# Ignore a specific file (e.g., secret.txt)
+secret.txt
+
+# Ignore all files in build/ except the important file
+build/*
+!build/important-file.js
