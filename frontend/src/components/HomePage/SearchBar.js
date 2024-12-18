@@ -23,6 +23,12 @@ const SearchBar = ({ onSearch }) => {
 		}
 	};
 	
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") {
+			handleSearch();
+		}
+	}
+
 	return (
 		<div className={styles.container}>
 			<h1 className={styles.title}>Find your Ideal Tutor Today</h1>
@@ -33,6 +39,7 @@ const SearchBar = ({ onSearch }) => {
 					placeholder='Try "Data Structure and Algorithms"'
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
+					onKeyDown={handleKeyDown}
 				/>
 				<button className={styles.button} onClick={handleSearch}>
 					<FontAwesomeIcon icon={faSearch} />
