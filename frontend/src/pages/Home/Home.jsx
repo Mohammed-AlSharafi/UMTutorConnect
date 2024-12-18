@@ -10,12 +10,17 @@ export default function Home() {
 
 	const { user } = useAuth();
 	const [foundUsers, setFoundUsers] = useState([]);
-	const [title, setTitle] = useState("Tutor List");
+	const [title, setTitle] = useState();
 	// const [subject, setSubject] = useState("");
 	// const [isSearching, setIsSearching] = useState(false);
 
 	useEffect(() => {
-		fetchInitialTutors();
+		if(user.role === "Student") {
+			fetchInitialTutors();
+		}
+		else{
+			setTitle("Students List");
+		}
 	}, []);
 
 	const fetchInitialTutors = async() => {

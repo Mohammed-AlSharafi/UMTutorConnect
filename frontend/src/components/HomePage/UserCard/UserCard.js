@@ -7,12 +7,23 @@ const UserCard = ({ name, subjects, rate, img, role }) => {
       <h3 className={styles.userName}>{name}</h3>
       {role === "Student" && (
         <>
-          <p className={styles.subjects}>{Array.isArray(subjects) ? subjects.join(", ") : "No subjects listed"}</p>
+          <div className={styles.subjects}>
+            {Array.isArray(subjects) && subjects.length > 0 ? (
+              subjects.map((subject, index) => (
+                <span key={index} className={styles.subjectPill}>
+                  {subject}
+                </span>
+              ))
+            ) : (
+              <span>No subjects listed</span>
+            )}
+          </div>
           <h4 className={styles.rate}>{rate} RM/H</h4>
         </>
       )}
     </div>
   );
 };
+
 
 export default UserCard;
