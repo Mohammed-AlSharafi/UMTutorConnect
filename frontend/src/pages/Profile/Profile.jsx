@@ -51,6 +51,7 @@ export default function Profile() {
         navigate(-1);
     }
 
+    console.log("user: ", user);    
     return (
         <div className={styles.profileContainer}>
             <div>
