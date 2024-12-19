@@ -1,15 +1,20 @@
+import { useState, useEffect } from "react";
 import ProfileImage from "../../../components/ProfileImage/ProfileImage";
 import styles from "./TutorProfile.module.css";
 
-export default function TutorProfile({ tutorInfo, img }) {
+export default function TutorProfile({ isloggedIn, tutorInfo, img }) {
     const { fullName, bio, subjects, rating, rate } = tutorInfo;
+
+    function editProfile() {
+        //implement edit profile
+    }
 
     return (
         <div className={styles.tutorProfileContainer}>
             <div className={styles.tutorProfile}>
                 <ProfileImage src={img} alt={"Profile image of the tutor"}/>
                 <h2>{fullName}</h2>
-                <button>Edit Profile</button>
+                {isloggedIn && <button onClick={editProfile}>Edit Profile</button>}
             </div>
 
             <div>
@@ -41,10 +46,10 @@ export default function TutorProfile({ tutorInfo, img }) {
                 </div>
             </div>
 
-            <div className={styles.contactSection}>
+            {!isloggedIn && <div className={styles.contactSection}>
                 <h2>Contact Me:</h2>
                 <button>Message</button>
-            </div>
+            </div>}
         </div>
     );
 }

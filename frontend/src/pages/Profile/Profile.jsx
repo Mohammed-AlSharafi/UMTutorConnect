@@ -4,7 +4,7 @@ import studentImg from "../../images/ProfilePage/student.png";
 import tutorImg from "../../images/ProfilePage/tutor.png";
 import TutorProfile from "./TutorProfile/TutorProfile";
 import { useAuth } from "../../contexts/AuthContext";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { getStudentById } from "../../proxies/students";
@@ -12,9 +12,11 @@ import { getTutorById } from "../../proxies/tutors";
 
 export default function Profile() {
     const { user: loggedInUser } = useAuth();
+    const [isloggedIn, setisLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
     const userId = useParams().id;
     const userRole = useParams().role;
+    let navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -38,14 +40,28 @@ export default function Profile() {
         }
         fetchUser();
     }, [userId, userRole, loggedInUser]);
+
+    useEffect(() => {
+        if (user && loggedInUser && loggedInUser._id === user._id) {
+            setisLoggedIn(true);
+        }
+    }, [user, isloggedIn])
+
+    function handleClick() {
+        navigate(-1);
+    }
+
     console.log("user: ", user);    
     return (
         <div className={styles.profileContainer}>
-            {user !== undefined  && user !== null &&
-                <div className={styles.profileDetailsContainer}>
-                    {user.role === "Student" ? <StudentProfile studentInfo={user} img={studentImg} /> : <TutorProfile tutorInfo={user} img={tutorImg} />}
-                </div>
-            }
+            <div>
+                <button className={styles.backBtn} onClick={handleClick}>Back</button>
+                {user !== undefined  && user !== null &&
+                    <div className={styles.profileDetailsContainer}>
+                        {user.role === "Student" ? <StudentProfile isloggedIn={isloggedIn} studentInfo={user} img={studentImg} /> : <TutorProfile isloggedIn={isloggedIn} tutorInfo={user} img={tutorImg} />}
+                    </div>
+                }
+            </div>
         </div>
     );
 }
