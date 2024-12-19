@@ -1,9 +1,24 @@
 .profileContainer {
     width: 100%;
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
     justify-content: center;
     align-items: center;
+}
+
+.profileContainer button {
+    border: 0;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.backBtn {
+    background-color: #545B9E;
+    padding: 10px 15px;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    margin-top: 1rem;
 }
 
 .profileContainer img {
@@ -16,8 +31,9 @@
     padding: 1.5rem;
     border-radius: 1rem;
     max-width: 300px;
+    min-width: 250px;
     width: 100%;
-    margin: 2rem;
+    margin: 1rem 0;
 }
 
 .profileDetailsContainer h2 {
@@ -33,10 +49,7 @@
 
 .profileDetailsContainer button {
     background-color: #040A79;
-    border: 0;
     border-radius: .5rem;
     padding: 10px 15px;
-    color: #ffffff;
     font-weight: bold;
-    cursor: pointer;
 }
