@@ -38,7 +38,7 @@ export default function Profile() {
         }
         fetchUser();
     }, [userId, userRole, loggedInUser]);
-
+    console.log("user: ", user);    
     return (
         <div className={styles.profileContainer}>
             {user !== undefined  && user !== null &&
