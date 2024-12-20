@@ -11,7 +11,7 @@ import { getStudentById } from "../../proxies/students";
 import { getTutorById } from "../../proxies/tutors";
 
 export default function Profile() {
-    const { loggedInUser } = useAuth();
+    const { user: loggedInUser } = useAuth();
     const [isloggedInUser, setisLoggedInUser] = useState(false);
     const [user, setUser] = useState(null);
     const userId = useParams().id;
