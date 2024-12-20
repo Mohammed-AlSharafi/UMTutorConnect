@@ -66,12 +66,24 @@ router.get("/", async (req, res) => {
 });
 
 // get top tutors
-router.get("/topTutors", (req, res) => {
+// router.get("/topTutors", (req, res) => {
+//   try {
+//     res.status(200).json(topTutors);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Internal Server Error', error: error.message });
+//   }
+// });
+
+// get top listing tutors
+router.get("/topTutors", async(req, res) => {
   try {
+    const topTutors = await tutorModel.find().sort({ rate: -1 }).limit(5);
+    
     res.status(200).json(topTutors);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    res.status(500).json( { message: 'Internal Server Error', error: error.message });
   }
 });
 
