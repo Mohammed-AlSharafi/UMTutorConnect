@@ -42,9 +42,6 @@ router.post("/register", async (req, res) => {
 });
 
 
-
-
-
 // set routes
 
 // get all students
@@ -62,7 +59,9 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const item = await studentModel.findById(req.params.id);
-    res.status(200).json({ user: item });
+
+    const { password, _v, ...userWithoutPassword } = item._doc;
+    res.status(200).json({ user: userWithoutPassword });
   }
   catch (error) {
     console.error(error);

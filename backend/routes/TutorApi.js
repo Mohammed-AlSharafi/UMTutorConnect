@@ -106,7 +106,11 @@ router.get("/search", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const item = await tutorModel.findById(req.params.id);
-    res.status(200).json({ user: item });
+
+    const { password, _v, ...userWithoutPassword } = item._doc;
+    console.log("userWithoutPassword: ", userWithoutPassword);
+
+    res.status(200).json({ user: userWithoutPassword });
   }
   catch (error) {
     console.error(error);

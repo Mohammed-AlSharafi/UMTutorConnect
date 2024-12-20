@@ -17,6 +17,7 @@ const UserList = ({ users, title }) => {
 							name={foundUser.fullName}
 							subjects={foundUser.subjects}
 							rate={foundUser.rate}
+							rating = {foundUser.rating}
 							img={foundUser.img}
 							role={user.role}
 						/>

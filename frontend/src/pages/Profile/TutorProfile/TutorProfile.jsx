@@ -35,7 +35,7 @@ export default function TutorProfile({ isloggedIn, tutorInfo, img }) {
                 <h2>Reviews</h2>
                 <div className={styles.ratingContainer}>
                     <h3 className={styles.rating}>{rating}</h3>
-                    <h3>--</h3>
+                    {/* <h3>--</h3> */}
                 </div>
             </div>
 
