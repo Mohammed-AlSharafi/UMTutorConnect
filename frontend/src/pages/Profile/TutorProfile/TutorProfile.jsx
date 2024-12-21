@@ -4,13 +4,35 @@ import styles from "./TutorProfile.module.css";
 
 import { getChat } from "../../../proxies/chats";
 import { useNavigate } from "react-router-dom";
+import { getTutorById, updateTutorProfile } from '../../../proxies/tutors';
+
+
+
 
 export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img }) {
     const { fullName, bio, subjects, rating, rate } = tutorInfo;
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedFullName, setEditedFullName] = useState(fullName);
+    const [editedBio, setEditedBio] = useState(bio);
+    const [editedSubjects, setEditedSubjects] = useState(subjects.join(", "));
+    const [editedRate, setEditedRate] = useState(rate);
+    
     const navigate = useNavigate();
 
+    // Function to toggle editing mode
     function editProfile() {
-        //implement edit profile
+        setIsEditing(!isEditing);
+    }
+
+    // Function to handle form submission (update profile)
+    function handleSaveProfile() {
+        // Assuming there's an API or proxy function to update the tutor profile
+        // You would call the update API here
+
+        // Example: updateTutorProfile({ fullName, bio, subjects, rate });
+
+        // After saving, set editing mode to false
+        setIsEditing(false);
     }
 
     async function handleMessageButtonClicked() {
@@ -30,37 +52,62 @@ export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img 
         <div className={styles.tutorProfileContainer}>
             <div className={styles.tutorProfile}>
                 <ProfileImage src={img} alt={"Profile image of the tutor"} />
-                <h2>{fullName}</h2>
-                {isloggedIn && <button onClick={editProfile}>Edit Profile</button>}
+                <h2>{isEditing ? (
+                    <input
+                        type="text"
+                        value={editedFullName}
+                        onChange={(e) => setEditedFullName(e.target.value)}
+                    />
+                ) : fullName}</h2>
+                {isloggedIn && <button onClick={editProfile}>{isEditing ? "Cancel" : "Edit Profile"}</button>}
             </div>
 
             <div>
                 <h2>Bio</h2>
-                <p>{bio}</p>
+                {isEditing ? (
+                    <textarea
+                        value={editedBio}
+                        onChange={(e) => setEditedBio(e.target.value)}
+                    />
+                ) : (
+                    <p>{bio}</p>
+                )}
             </div>
 
             <div>
                 <h2>What I Tutor</h2>
-                {subjects.map((item) => {
-                    return (
-                        <p>{item}</p>
-                    );
-                })}
+                {isEditing ? (
+                    <textarea
+                        value={editedSubjects}
+                        onChange={(e) => setEditedSubjects(e.target.value)}
+                    />
+                ) : (
+                    subjects.map((item) => <p key={item}>{item}</p>)
+                )}
             </div>
 
             <div className={styles.reviewContainer}>
                 <h2>Reviews</h2>
                 <div className={styles.ratingContainer}>
                     <h3 className={styles.rating}>{rating}</h3>
-                    {/* <h3>--</h3> */}
                 </div>
             </div>
 
             <div>
                 <h2>Hourly Rate</h2>
-                <div className={styles.hourlyRate}>
+                {isEditing ? (
+                    <input
+                        type="number"
+                        value={editedRate}
+                        onChange={(e) => setEditedRate(e.target.value)}
+                    />
+                ) : (
                     <p>RM {rate}</p>
-                </div>
+                )}
+            </div>
+
+            <div>
+                {isEditing && <button onClick={handleSaveProfile}>Save Profile</button>}
             </div>
 
             {!isloggedIn && <div className={styles.contactSection}>
