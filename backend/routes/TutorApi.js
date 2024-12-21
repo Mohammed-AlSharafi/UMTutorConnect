@@ -8,6 +8,39 @@ const tutorModel = require('../schemas/Tutor');
 const { studentModel } = require('../schemas/Student');
 const { authMiddleware } = require('./middleware/AuthMiddleware');
 
+
+// Update tutor profile (PUT)
+router.put("/editProfile/:id", authMiddleware, async (req, res) => {
+  try {
+    const { firstName, lastName, email, bio, subjects, rate } = req.body;
+    const tutorId = req.params.id;
+
+    // Check if tutor exists
+    const tutor = await tutorModel.findById(tutorId);
+    if (!tutor) {
+      return res.status(404).json({ message: 'Tutor not found' });
+    }
+
+    // Update tutor details
+    tutor.firstName = firstName || tutor.firstName;
+    tutor.lastName = lastName || tutor.lastName;
+    tutor.email = email || tutor.email;
+    tutor.bio = bio || tutor.bio;
+    tutor.subjects = subjects || tutor.subjects;
+    tutor.rate = rate || tutor.rate;
+
+    // Save updated tutor
+    await tutor.save();
+
+    // Send response
+    res.status(200).json({ message: 'Tutor profile updated successfully', tutor });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+
 // Register Tutor (POST)
 router.post("/register", async (req, res) => {
   try {

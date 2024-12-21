@@ -37,7 +37,7 @@ function Header() {
               </Link>
               <Link
                 to={`/profile/${loggedInUser.role}/${loggedInUser._id}`}
-                className={`${styles.navLink} ${location.pathname === `/profile` ? styles.active : ''}`}
+                className={`${styles.navLink} ${location.pathname.startsWith('/profile') ? styles.active : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Profile
