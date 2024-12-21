@@ -2,7 +2,11 @@ import axiosInstance from "./axiosHandler";
 
 export const getTutorById = async (tutorId) => {
   try {
-    const response = await axiosInstance.get(`/tutorApi/${tutorId}`);
+    const response = await axiosInstance.get(`/tutorApi/${tutorId}`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
     console.log("Tutor data: ", response);
     return response;
   }
@@ -55,7 +59,11 @@ export const authenticateTutor = async (username, password) => {
 
 export const fetchTopTutors = async () => {
   try {
-    const response = await axiosInstance.get("tutorApi/topTutors");
+    const response = await axiosInstance.get("tutorApi/topTutors", {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
     console.log("Top tutors fetched: ", response.data);
     return response.data;
   } catch (error) {
@@ -71,7 +79,11 @@ export const fetchTopTutors = async () => {
 export const fetchTutorsBySubject = async (subject) => {
   try {
     console.log("Fetching tutors for subject: ", subject);
-    const response = await axiosInstance.get(`tutorApi/search?subject=${encodeURIComponent(subject)}`);
+    const response = await axiosInstance.get(`tutorApi/search?subject=${encodeURIComponent(subject)}`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
     console.log("Tutors fetched: ", response.data);
     return response.data;
   } catch (error) {
@@ -105,7 +117,11 @@ export const getStudents = async (tutorId) => {
 
 export const addStudent = async (studentId, tutorId) => {
   try {
-    const response = await axiosInstance.post(`tutorApi/addStudent/${tutorId}`, { studentId });
+    const response = await axiosInstance.post(`tutorApi/addStudent/${tutorId}`, { studentId }, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
     console.log("Student added: ", response);
     return response.data.tutor;
   } catch (error) {
@@ -120,7 +136,11 @@ export const addStudent = async (studentId, tutorId) => {
 
 export const removeStudent = async (studentId, tutorId) => {
   try {
-    const response = await axiosInstance.post(`tutorApi/removeStudent/${tutorId}`, { studentId });
+    const response = await axiosInstance.post(`tutorApi/removeStudent/${tutorId}`, { studentId }, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
     console.log("Student removed: ", response);
     return response.data.tutor;
   } catch (error) {
@@ -132,4 +152,3 @@ export const removeStudent = async (studentId, tutorId) => {
     throw error;
   }
 }
-// export { getTutorById, authenticateTutor, registerTutor, fetchTopTutors, fetchTutorsBySubject };

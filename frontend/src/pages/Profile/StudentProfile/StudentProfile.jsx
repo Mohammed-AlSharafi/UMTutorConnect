@@ -33,11 +33,13 @@ export default function StudentProfile({ isloggedIn, loggedInUser, updateLoggedI
         }
     }
 
-    function containsStudent(tutor, id) {
-        console.log("tutor.students: ", tutor.students);
-        for (let student of tutor.students) {
-            if (student._id === id) {
-                return true;
+    function containsStudent(loggedInUser, id) {
+        if (loggedInUser.role === "Tutor") {
+            console.log("tutor.students: ", loggedInUser.students);
+            for (let student of loggedInUser.students) {
+                if (student._id === id) {
+                    return true;
+                }
             }
         }
         return false;
