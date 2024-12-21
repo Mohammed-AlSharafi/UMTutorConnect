@@ -10,9 +10,10 @@ import { getTutorById, editTutorProfile } from '../../../proxies/tutors';
 
 
 export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img }) {
-    const { fullName, bio, subjects, rating, rate } = tutorInfo;
+    const { firstName, lastName, bio, subjects, rating, rate } = tutorInfo;
     const [isEditing, setIsEditing] = useState(false);
-    const [editedFullName, setEditedFullName] = useState(fullName);
+    const [editedfirstName, setEditedFirstName] = useState(firstName);
+    const [editedlastName, setEditedlastName] = useState(lastName);
     const [editedBio, setEditedBio] = useState(bio);
     const [editedSubjects, setEditedSubjects] = useState(subjects.join(", "));
     const [editedRate, setEditedRate] = useState(rate);
@@ -28,7 +29,8 @@ export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img 
     async function handleSaveProfile() {
   try {
     const updatedTutorData = {
-      fullName: editedFullName,
+      firstName: editedfirstName,
+      lastName: editedlastName,
       bio: editedBio,
       subjects: editedSubjects.split(", ").map((subject) => subject.trim()),
       rate: editedRate,
@@ -66,10 +68,18 @@ export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img 
                 <h2>{isEditing ? (
                     <input
                         type="text"
-                        value={editedFullName}
-                        onChange={(e) => setEditedFullName(e.target.value)}
+                        value={editedfirstName}
+                        onChange={(e) => setEditedFirstName(e.target.value)}
                     />
-                ) : fullName}</h2>
+                ) : firstName}</h2>
+
+                <h2>{isEditing ? (
+                    <input
+                        type="text"
+                        value={editedlastName}
+                        onChange={(e) => setEditedlastName(e.target.value)}
+                    />
+                ) : lastName}</h2>
                 {isloggedIn && <button onClick={editProfile}>{isEditing ? "Cancel" : "Edit Profile"}</button>}
             </div>
 
