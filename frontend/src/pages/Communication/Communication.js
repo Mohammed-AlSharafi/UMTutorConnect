@@ -9,7 +9,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const Communication = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { loggedInUser } = useAuth();
 
     const [chats, setChats] = useState(null);
     const [selectedChat, setSelectedChat] = useState(null);
@@ -20,7 +20,7 @@ const Communication = () => {
         // get chats from backend
         async function fetchChats() {
             try {
-                const chats = await getChats(user._id, user.role);
+                const chats = await getChats(loggedInUser._id, loggedInUser.role);
                 console.log(chats);
                 if (chats) {
                     setChats(chats);
@@ -34,13 +34,13 @@ const Communication = () => {
                     }
                 }
                 else {
-                    
+
                 }
                 navigate("/");
             }
         }
         fetchChats();
-    }, [user, navigate]);
+    }, [loggedInUser, navigate]);
 
     useEffect(() => {
         if (chats) {
@@ -61,7 +61,7 @@ const Communication = () => {
     };
 
     const handleSendMessage = async (content) => {
-        const newMessage = await sendMessage(selectedChat._id, user, content);
+        const newMessage = await sendMessage(selectedChat._id, loggedInUser, content);
 
         console.log(newMessage);
 
@@ -98,7 +98,7 @@ const Communication = () => {
                     <ChatArea
                         chat={selectedChat}
                         onSendMessage={handleSendMessage}
-                        userId={user._id}
+                        userId={loggedInUser._id}
                     />
                 </>
             )}

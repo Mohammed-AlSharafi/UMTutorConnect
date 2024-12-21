@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 
 // import student model
-const studentModel = require('../schemas/Student');
+const { studentModel } = require('../schemas/Student');  // student schema exports both model and schema
 
 // Register student (POST)
 router.post("/register", async (req, res) => {
@@ -48,7 +48,7 @@ router.post("/register", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const items = await studentModel.find();
-    res.json(items);
+    res.status(200).json({students: items});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });

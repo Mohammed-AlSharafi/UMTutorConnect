@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const studentModel = require("../../schemas/Student");
+const { studentModel } = require("../../schemas/Student");
 const tutorModel = require("../../schemas/Tutor");
 
 const authMiddleware = async (req, res, next) => {

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { studentSchema } = require("./Student");
 
 const tutorSchema = new mongoose.Schema({
     username: {
@@ -61,6 +62,10 @@ const tutorSchema = new mongoose.Schema({
         default: "Tutor",
         required: true,
     },
+    students: {
+        type: [studentSchema],
+        default: [],
+    }
     // enabled: {
     //     type: Boolean,
     //     default: true,
@@ -75,5 +80,5 @@ const tutorSchema = new mongoose.Schema({
     // },
 })
 
-const model = mongoose.model("Tutor", tutorSchema);
-module.exports = model;
+const tutorModel = mongoose.model("Tutor", tutorSchema);
+module.exports = tutorModel;

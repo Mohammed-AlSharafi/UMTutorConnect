@@ -84,4 +84,52 @@ export const fetchTutorsBySubject = async (subject) => {
   }
 }
 
+export const getStudents = async (tutorId) => {
+  try {
+    const response = await axiosInstance.get(`tutorApi/${tutorId}/students`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
+    console.log("Students fetched: ", response.data.students);
+    return response.data.students;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error fetching students:", error.response.data);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+};
+
+export const addStudent = async (studentId, tutorId) => {
+  try {
+    const response = await axiosInstance.post(`tutorApi/addStudent/${tutorId}`, { studentId });
+    console.log("Student added: ", response);
+    return response.data.tutor;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error adding student:", error.response.data);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+}
+
+export const removeStudent = async (studentId, tutorId) => {
+  try {
+    const response = await axiosInstance.post(`tutorApi/removeStudent/${tutorId}`, { studentId });
+    console.log("Student removed: ", response);
+    return response.data.tutor;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error removing student:", error.response.data);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+}
 // export { getTutorById, authenticateTutor, registerTutor, fetchTopTutors, fetchTutorsBySubject };

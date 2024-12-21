@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { fetchTopTutors } from "../../../proxies/tutors";
 
 export default function StudentHome() {
-  const { user } = useAuth();
+  const { loggedInUser } = useAuth();
   const [tutors, setTutors] = useState([]);
   const [title, setTitle] = useState();
   // const [subject, setSubject] = useState("");

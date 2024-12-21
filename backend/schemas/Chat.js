@@ -111,5 +111,5 @@ chatSchema.methods.addMessage = async function (content, sender) {
   return newMessage;
 };
 
-const model = mongoose.model('Chat', chatSchema);
-module.exports = model;
+const chatModel = mongoose.model('Chat', chatSchema);
+module.exports = chatModel;

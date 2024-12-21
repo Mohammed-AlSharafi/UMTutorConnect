@@ -11,7 +11,7 @@ import { getStudentById } from "../../proxies/students";
 import { getTutorById } from "../../proxies/tutors";
 
 export default function Profile() {
-    const { user: loggedInUser } = useAuth();
+    const { loggedInUser, updateLoggedInUser } = useAuth();
     const [isloggedInUser, setisLoggedInUser] = useState(false);
     const [user, setUser] = useState(null);
     const userId = useParams().id;
@@ -48,22 +48,36 @@ export default function Profile() {
         else {
             setisLoggedInUser(false);
         }
+        console.log("user: ", user);
     }, [user, isloggedInUser, loggedInUser])
 
     function handleClick() {
         navigate(-1);
     }
 
-    console.log("user: ", user);
     return (
         <div className={styles.profileContainer}>
             <div>
                 <button className={styles.backBtn} onClick={handleClick}>Back</button>
-                {user !== undefined && user !== null &&
+                {user && (
                     <div className={styles.profileDetailsContainer}>
-                        {user.role === "Student" ? <StudentProfile isloggedIn={isloggedInUser} studentInfo={user} img={studentImg} /> : <TutorProfile isloggedIn={isloggedInUser} tutorInfo={user} img={tutorImg} />}
+                        {user.role === "Student" ? (
+                            <StudentProfile
+                                isloggedIn={isloggedInUser}
+                                loggedInUser={loggedInUser}
+                                updateLoggedInUser={updateLoggedInUser}
+                                studentInfo={user}
+                                img={studentImg}
+                            />
+                        ) : (
+                            <TutorProfile
+                                isloggedIn={isloggedInUser}
+                                tutorInfo={user}
+                                img={tutorImg}
+                            />
+                        )}
                     </div>
-                }
+                )}
             </div>
         </div>
     );

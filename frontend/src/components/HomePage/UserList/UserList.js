@@ -4,7 +4,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
 const UserList = ({ users, title }) => {
-	const { user } = useAuth();
+	const { loggedInUser } = useAuth();
 
 	return (
 		<div className={styles.UserList}>
@@ -19,7 +19,7 @@ const UserList = ({ users, title }) => {
 							rate={foundUser.rate}
 							rating = {foundUser.rating}
 							img={foundUser.img}
-							role={user.role}
+							role={loggedInUser.role}
 						/>
 					</Link>
 				))}

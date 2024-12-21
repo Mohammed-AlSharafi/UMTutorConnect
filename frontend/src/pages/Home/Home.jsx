@@ -6,11 +6,11 @@ import TutorHome from './TutorHome/TutorHome';
 
 export default function Home() {
 
-	const { user } = useAuth();
+	const { loggedInUser } = useAuth();
 
 	return (
 		<div className={styles.container}>
-			{user.role === "Student"? <StudentHome /> : <TutorHome />}
+			{loggedInUser.role === "Student"? <StudentHome /> : <TutorHome />}
 		</div>
 	)
 
