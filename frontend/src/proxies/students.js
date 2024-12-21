@@ -1,9 +1,12 @@
 import axiosInstance from "./axiosHandler";
 
-
 const getStudentById = async (studentId) => {
   try {
-    const response = await axiosInstance.get(`/studentApi/${studentId}`);
+    const response = await axiosInstance.get(`/studentApi/${studentId}`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
     console.log("Student data: ", response);
     return response;
   }

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./UserCard.module.css";
 
-const UserCard = ({ name, subjects, rate, img, role }) => {
+const UserCard = ({ name, subjects, rate, rating, img, role }) => {
   return (
     <div className={styles.userCard}>
       <h3 className={styles.userName}>{name}</h3>

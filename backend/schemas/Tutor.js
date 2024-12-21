@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { studentSchema } = require("./Student");
 
 const tutorSchema = new mongoose.Schema({
     username: {
@@ -45,12 +46,26 @@ const tutorSchema = new mongoose.Schema({
         required: true,
         default: 10
     },
-    
+    rating: {
+        type: Number,
+        default: 0,
+        required: true,
+        validate: {
+            validator: function (v) {
+                return v >= 0 && v <= 5;
+            },
+            message: "Rating must be between 0 and 5",
+        },
+    },
     role: {
         type: String,
         default: "Tutor",
         required: true,
     },
+    students: {
+        type: [studentSchema],
+        default: [],
+    }
     // enabled: {
     //     type: Boolean,
     //     default: true,
@@ -65,5 +80,5 @@ const tutorSchema = new mongoose.Schema({
     // },
 })
 
-const model = mongoose.model("Tutor", tutorSchema);
-module.exports = model;
+const tutorModel = mongoose.model("Tutor", tutorSchema);
+module.exports = tutorModel;

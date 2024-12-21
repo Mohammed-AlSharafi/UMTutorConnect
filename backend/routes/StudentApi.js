@@ -5,7 +5,8 @@ const bcrypt = require("bcryptjs");
 
 
 // import student model
-const studentModel = require('../schemas/Student');
+const { studentModel } = require('../schemas/Student');  // student schema exports both model and schema
+const { authMiddleware } = require('./middleware/AuthMiddleware');
 
 // Register student (POST)
 router.post("/register", async (req, res) => {
@@ -42,33 +43,19 @@ router.post("/register", async (req, res) => {
 });
 
 
-
-
-
 // set routes
 
 // get all students
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const items = await studentModel.find();
-    res.json(items);
+    res.status(200).json({students: items});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
-// get student by id
-router.get("/:id", async (req, res) => {
-  try {
-    const item = await studentModel.findById(req.params.id);
-    res.status(200).json({ user: item });
-  }
-  catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
-  }
-});
 
 // login student
 router.post("/authenticate", async (req, res) => {
@@ -107,6 +94,20 @@ router.post("/authenticate", async (req, res) => {
   }
 });
 
+
+// get student by id
+router.get("/:id", authMiddleware, async (req, res) => {
+  try {
+    const item = await studentModel.findById(req.params.id);
+
+    const { password, _v, ...userWithoutPassword } = item._doc;
+    res.status(200).json({ user: userWithoutPassword });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
 
 module.exports = router;
 

@@ -3,22 +3,27 @@ import React, { createContext, useContext, useState } from 'react';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
+  const [loggedInUser, setLoggedInUser] = useState(() => {
     return JSON.parse(sessionStorage.getItem('user')) || null;
   });
 
   // Login function
   const login = (userData, token) => {
-    setUser(userData);
+    setLoggedInUser(userData);
     sessionStorage.setItem("user", JSON.stringify(userData));
     sessionStorage.setItem('token', token);   // to be used with every request to private routes
   };
 
   // Logout function
   const logout = () => {
-    setUser(null);
+    setLoggedInUser(null);
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('token');
+  };
+
+  const updateLoggedInUser = (updatedUser) => {
+    setLoggedInUser(updatedUser);
+    sessionStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
   // Check if user is authenticated
@@ -28,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ loggedInUser, updateLoggedInUser, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

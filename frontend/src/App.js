@@ -30,6 +30,7 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/profile/:role/:id" element={<Profile />} />
           <Route path="/communication" element={<Communication />} />
+          <Route path="/communication/:chatId" element={<Communication />} />
         </Route>
       </Routes>
     </div>

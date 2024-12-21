@@ -5,6 +5,8 @@ const bcrypt = require("bcryptjs");
 
 // import tutor model
 const tutorModel = require('../schemas/Tutor');
+const { studentModel } = require('../schemas/Student');
+const { authMiddleware } = require('./middleware/AuthMiddleware');
 
 // Register Tutor (POST)
 router.post("/register", async (req, res) => {
@@ -43,89 +45,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Dummy data for top tutors
-const topTutors = [
-  { fullName: "John Doe", role: "Tutor", subjects: "Data Structures", rate: 20, img: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { fullName: "Jane Smith", role: "Tutor", subjects: "Algorithms", rate: 25, img: "https://plus.unsplash.com/premium_photo-1658506795539-8c3e055c960c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { fullName: "Chris Lee", role: "Tutor", subjects: "Machine Learning", rate: 30, img: "https://images.unsplash.com/photo-1495603889488-42d1d66e5523?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
-
-  // 	You can add more here
-];
-
-// set routes
-
-// get all tutors
-router.get("/", async (req, res) => {
-  try {
-    const items = await tutorModel.find();
-    res.json(items);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
-  }
-});
-
-// get top tutors
-// router.get("/topTutors", (req, res) => {
-//   try {
-//     res.status(200).json(topTutors);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Internal Server Error', error: error.message });
-//   }
-// });
-
-// get top listing tutors
-router.get("/topTutors", async(req, res) => {
-  try {
-    const topTutors = await tutorModel.find().sort({ rate: -1 }).limit(5);
-    
-    res.status(200).json(topTutors);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json( { message: 'Internal Server Error', error: error.message });
-  }
-});
-
-// search tutors by subject
-router.get("/search", async (req, res) => {
-  try {
-    const { subject } = req.query;
-
-    // subject is blank
-    if (!subject) {
-      return res.status(400).json({ error: 'Subject is required' });
-    }
-
-    // Use regex for case-insensitive and substring matching
-    const tutors = await tutorModel.find({ subjects: { $regex: subject, $options: 'i' } });
-
-    // no tutor for subject
-    if (tutors.length === 0) {
-      console.log("No tutors found for subject: ", subject);
-      return res.status(404).json({ message: 'No tutors found for this subject' });
-    }
-    console.log("Tutors found for subject: ", subject, tutors);
-    res.status(200).json(tutors);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
-  }
-});
-
-
-// get tutor by id
-router.get("/:id", async (req, res) => {
-  try {
-    const item = await tutorModel.findById(req.params.id);
-    res.status(200).json({ user: item });
-  }
-  catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
-  }
-});
-
 // login tutor
 router.post("/authenticate", async (req, res) => {
   try {
@@ -156,6 +75,159 @@ router.post("/authenticate", async (req, res) => {
     const token = jwt.sign(tutorDataExcludingPassword, process.env.JWT_SECRET, {});
 
     res.status(200).json({ user: tutorDataExcludingPassword, token: token });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// get all tutors
+router.get("/", authMiddleware, async (req, res) => {
+  try {
+    const items = await tutorModel.find();
+    res.json(items);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// get top tutors
+router.get("/topTutors", authMiddleware, async (req, res) => {
+  try {
+    // get the tutors with the highest ratings
+    const topTutors = await tutorModel.find().sort({ rating: -1 }).limit(15).exec();
+
+    res.status(200).json(topTutors);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// search tutors by subject
+router.get("/search", authMiddleware, async (req, res) => {
+  try {
+    const { subject } = req.query;
+
+    // subject is blank
+    if (!subject) {
+      return res.status(400).json({ error: 'Subject is required' });
+    }
+
+    // Use regex for case-insensitive and substring matching
+    const tutors = await tutorModel.find({ subjects: { $regex: subject, $options: 'i' } });
+
+    // no tutor for subject
+    if (tutors.length === 0) {
+      console.log("No tutors found for subject: ", subject);
+      return res.status(404).json({ message: 'No tutors found for this subject' });
+    }
+    console.log("Tutors found for subject: ", subject, tutors);
+    res.status(200).json(tutors);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// get tutor by id
+router.get("/:id", authMiddleware, async (req, res) => {
+  try {
+    const item = await tutorModel.findById(req.params.id);
+
+    const { password, _v, ...userWithoutPassword } = item._doc;
+    console.log("userWithoutPassword: ", userWithoutPassword);
+
+    res.status(200).json({ user: userWithoutPassword });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// get all students for tutor
+router.get("/:id/students", authMiddleware, async (req, res) => {
+  try {
+    const tutorId = req.params.id;
+
+    if (!req.user || req.user.id !== tutorId) {
+      return res.status(403).json({ message: 'Unauthorized to access these students' });
+    }
+
+    // find tutor
+    const tutor = await tutorModel.findById(tutorId);
+    if (!tutor) {
+      return res.status(404).json({ message: 'Tutor not found' });
+    }
+
+    // get all students for tutor
+    const students = await studentModel.find({ _id: { $in: tutor.students } });
+    console.log("Students for tutor: ", students);
+
+    res.status(200).json({ students: students });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+})
+
+// add student for tutor
+router.post("/addStudent/:tutorId", authMiddleware, async (req, res) => {
+  try {
+    const { studentId } = req.body;
+    const tutorId = req.params.tutorId;
+
+    // find tutor
+    const tutor = await tutorModel.findById(tutorId);
+    if (!tutor) {
+      return res.status(404).json({ message: 'Tutor not found' });
+    }
+
+    // find student
+    const student = await studentModel.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // add student to tutor
+    tutor.students.push(student);
+    await tutor.save();
+
+    res.status(200).json({ message: 'Student added successfully', tutor: tutor });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// remove student for tutor
+router.post("/removeStudent/:tutorId", authMiddleware, async (req, res) => {
+  try {
+    const { studentId } = req.body;
+    const tutorId = req.params.tutorId;
+
+    // find tutor
+    const tutor = await tutorModel.findById(tutorId);
+    if (!tutor) {
+      return res.status(404).json({ message: 'Tutor not found' });
+    }
+
+    // find student
+    const student = await studentModel.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // remove student from tutor
+    tutor.students = tutor.students.filter((student) => student._id.toString() !== studentId);
+    await tutor.save();
+
+    res.status(200).json({ message: 'Student removed successfully', tutor: tutor });
   }
   catch (error) {
     console.error(error);

@@ -4,12 +4,13 @@ import ChatArea from "../../components/ChatArea/ChatArea";
 import { useEffect, useState } from "react";
 
 import { getChats, sendMessage } from "../../proxies/chats";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Communication = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { loggedInUser } = useAuth();
+    const { chatId } = useParams();
 
     const [chats, setChats] = useState(null);
     const [selectedChat, setSelectedChat] = useState(null);
@@ -20,11 +21,20 @@ const Communication = () => {
         // get chats from backend
         async function fetchChats() {
             try {
-                const chats = await getChats(user._id, user.role);
+                const chats = await getChats(loggedInUser._id, loggedInUser.role);
                 console.log(chats);
                 if (chats) {
                     setChats(chats);
-                    setSelectedChat(chats[0]);
+
+                    // if chatId is provided, select that chat
+                    if (chatId) {
+                        const chat = chats.find(c => c._id === chatId);
+                        setSelectedChat(chat);
+                    }
+                    else {
+                        // if no chatId is provided, select the first chat from the list
+                        setSelectedChat(chats[0]);
+                    }
                 }
             }
             catch (error) {
@@ -34,13 +44,13 @@ const Communication = () => {
                     }
                 }
                 else {
-                    
+
                 }
                 navigate("/");
             }
         }
         fetchChats();
-    }, [user, navigate]);
+    }, [chatId, loggedInUser, navigate]);
 
     useEffect(() => {
         if (chats) {
@@ -61,7 +71,7 @@ const Communication = () => {
     };
 
     const handleSendMessage = async (content) => {
-        const newMessage = await sendMessage(selectedChat._id, user, content);
+        const newMessage = await sendMessage(selectedChat._id, loggedInUser, content);
 
         console.log(newMessage);
 
@@ -98,7 +108,7 @@ const Communication = () => {
                     <ChatArea
                         chat={selectedChat}
                         onSendMessage={handleSendMessage}
-                        userId={user._id}
+                        userId={loggedInUser._id}
                     />
                 </>
             )}
