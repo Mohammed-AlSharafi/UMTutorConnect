@@ -4,7 +4,7 @@ import styles from "./TutorProfile.module.css";
 
 import { getChat } from "../../../proxies/chats";
 import { useNavigate } from "react-router-dom";
-import { getTutorById, updateTutorProfile } from '../../../proxies/tutors';
+import { getTutorById, editTutorProfile } from '../../../proxies/tutors';
 
 
 
@@ -25,15 +25,26 @@ export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img 
     }
 
     // Function to handle form submission (update profile)
-    function handleSaveProfile() {
-        // Assuming there's an API or proxy function to update the tutor profile
-        // You would call the update API here
+    async function handleSaveProfile() {
+  try {
+    const updatedTutorData = {
+      fullName: editedFullName,
+      bio: editedBio,
+      subjects: editedSubjects.split(", ").map((subject) => subject.trim()),
+      rate: editedRate,
+    };
 
-        // Example: updateTutorProfile({ fullName, bio, subjects, rate });
+    // Call the API to update the profile
+    const response = await editTutorProfile(tutorInfo._id, updatedTutorData);
+    console.log("Profile updated successfully:", response);
 
-        // After saving, set editing mode to false
-        setIsEditing(false);
-    }
+    // After saving, set editing mode to false
+    setIsEditing(false);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
+}
+
 
     async function handleMessageButtonClicked() {
         // get the chat with the user
