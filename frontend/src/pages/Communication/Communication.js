@@ -4,12 +4,13 @@ import ChatArea from "../../components/ChatArea/ChatArea";
 import { useEffect, useState } from "react";
 
 import { getChats, sendMessage } from "../../proxies/chats";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Communication = () => {
     const navigate = useNavigate();
     const { loggedInUser } = useAuth();
+    const { chatId } = useParams();
 
     const [chats, setChats] = useState(null);
     const [selectedChat, setSelectedChat] = useState(null);
@@ -24,7 +25,16 @@ const Communication = () => {
                 console.log(chats);
                 if (chats) {
                     setChats(chats);
-                    setSelectedChat(chats[0]);
+
+                    // if chatId is provided, select that chat
+                    if (chatId) {
+                        const chat = chats.find(c => c._id === chatId);
+                        setSelectedChat(chat);
+                    }
+                    else {
+                        // if no chatId is provided, select the first chat from the list
+                        setSelectedChat(chats[0]);
+                    }
                 }
             }
             catch (error) {
@@ -40,7 +50,7 @@ const Communication = () => {
             }
         }
         fetchChats();
-    }, [loggedInUser, navigate]);
+    }, [chatId, loggedInUser, navigate]);
 
     useEffect(() => {
         if (chats) {

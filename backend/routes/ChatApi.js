@@ -8,29 +8,6 @@ const chatModel = require('../schemas/Chat');
 
 // set routes
 
-// get all chats involving a user
-// use authMiddleware as this is a private route
-router.get('/chats/:userRole/:userId', authMiddleware, async (req, res) => {
-  const userId = req.params.userId;
-  const userRole = req.params.userRole;
-
-  console.log(`Getting chats for user ${userId} with role ${userRole}`);
-
-  try {
-    // Verify that the authenticated user matches the requested user ID
-    if (req.user.id !== userId) {   // && req.user.role !== 'admin'
-      return res.status(403).json({ message: "Unauthorized to access these chats" });
-    }
-
-    const chats = await chatModel.getChats(userId);
-    res.status(200).json({ chats: chats });
-  }
-  catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
 
 // send message to a chat
 // use authMiddleware as this is a private route
@@ -75,5 +52,50 @@ router.post('/chats/:chatId/sendMessage', authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// get chat between two users
+// use authMiddleware as this is a private route
+router.get('/chats', authMiddleware, async (req, res) => {
+  const user1 = req.query.user1;
+  const user2 = req.query.user2;
+
+  console.log("user1: ", user1);
+  console.log("user2: ", user2);
+  console.log("Getting chat between user1 and user2");
+
+  try {
+    const chat = await chatModel.findOrCreateChat(user1, user2);
+    res.status(200).json({ chat: chat });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+// get all chats involving a user
+// use authMiddleware as this is a private route
+router.get('/chats/:userRole/:userId', authMiddleware, async (req, res) => {
+  const userId = req.params.userId;
+  const userRole = req.params.userRole;
+
+  console.log(`Getting chats for user ${userId} with role ${userRole}`);
+
+  try {
+    // Verify that the authenticated user matches the requested user ID
+    if (req.user.id !== userId) {   // && req.user.role !== 'admin'
+      return res.status(403).json({ message: "Unauthorized to access these chats" });
+    }
+
+    const chats = await chatModel.getChats(userId);
+    res.status(200).json({ chats: chats });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 module.exports = router;

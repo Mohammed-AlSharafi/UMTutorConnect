@@ -46,16 +46,18 @@ chatSchema.statics.findOrCreateChat = async function (user1, user2) {
   const chat = await this.findOne({
     participants: {
       $all: [
-        { id: user1._id, fullName: user1.fullName, role: user1.role },
-        { id: user2._id, fullName: user2.fullName, role: user2.role },
+        { $elemMatch: { id: user1._id, fullName: user1.fullName, role: user1.role } },
+        { $elemMatch: { id: user2._id, fullName: user2.fullName, role: user2.role } },
       ],
     },
   });
 
   if (chat) {
+    console.log(`Found chat between ${user1.fullName} and ${user2.fullName}`);
     return chat;
   }
 
+  console.log(`Creating new chat between ${user1.fullName} and ${user2.fullName}`);
   const newChat = new this({
     participants: [
       { id: user1._id, fullName: user1.fullName, role: user1.role },
