@@ -2,6 +2,7 @@ import styles from "./Communication.module.css";
 import MessageList from "../../components/MessageList/MessageList";
 import ChatArea from "../../components/ChatArea/ChatArea";
 import { useEffect, useState } from "react";
+import Pusher from "pusher-js";
 
 import { getChats, sendMessage } from "../../proxies/chats";
 import { useNavigate, useParams } from "react-router-dom";
@@ -50,6 +51,21 @@ const Communication = () => {
             }
         }
         fetchChats();
+
+        // initalise pusher
+        const key = process.env.REACT_APP_PUSHER_KEY;
+        const cluster = process.env.REACT_APP_PUSHER_CLUSTER;
+
+        const pusher = new Pusher(key, {
+            cluster: cluster,
+            useTLS: true
+        });
+
+        const channel = pusher.subscribe("chats");
+        channel.bind("send-message-event", function (data) {
+            return data;
+        });
+
     }, [chatId, loggedInUser, navigate]);
 
     useEffect(() => {

@@ -5,6 +5,15 @@ const {authMiddleware} = require("./middleware/AuthMiddleware");
 // import Chat model
 const chatModel = require('../schemas/Chat');
 
+// initialize Pusher
+const Pusher = require("pusher");
+const pusher = new Pusher({
+  appId: process.env.APP_ID,
+  key: process.env.KEY,
+  secret: process.env.SECRET,
+  cluster: process.env.CLUSTER,
+  useTLS: true
+});
 
 // set routes
 
