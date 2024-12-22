@@ -53,7 +53,7 @@ const Communication = () => {
         fetchChats();
 
         // initalise pusher
-        const key = process.env.REACT_APP_PUSHER_KEY;
+        const key = process.env.REACT_APP_PUSHER_API_KEY;
         const cluster = process.env.REACT_APP_PUSHER_CLUSTER;
 
         const pusher = new Pusher(key, {
@@ -61,10 +61,43 @@ const Communication = () => {
             useTLS: true
         });
 
+        // subscribe to chats channel
         const channel = pusher.subscribe("chats");
         channel.bind("send-message-event", function (data) {
+            console.log("Received message:", data.message);
+
+            if (data.message.sender.id !== loggedInUser._id) {
+                setChats(prevChats => {
+                    const updatedChats = prevChats.map(chat =>
+                        chat._id === data.message.chatId
+                            ? {
+                                ...chat,
+                                messages: [...chat.messages, data.message],
+                                lastMessage: data.message.timestamp
+                            }
+                            : chat
+                    );
+                    updatedChats.sort((a, b) => new Date(b.lastMessage) - new Date(a.lastMessage));
+
+                    setSelectedChat(prevSelectedChat => {
+                        const updatedSelectedChat = updatedChats.find(chat => chat._id === prevSelectedChat._id);
+                        return updatedSelectedChat;
+                    })
+
+                    return updatedChats;
+                });
+
+            }
             return data;
         });
+        console.log("Subscribed to chats channel");
+
+        // clean up function
+        return () => {
+            pusher.unsubscribe("chats");
+            pusher.disconnect();
+            console.log("Unsubscribed from chats channel");
+        }
 
     }, [chatId, loggedInUser, navigate]);
 
