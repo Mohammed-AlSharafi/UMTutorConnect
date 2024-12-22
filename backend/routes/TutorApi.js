@@ -179,7 +179,7 @@ router.get("/search", authMiddleware, async (req, res) => {
     }
 
     const ratingList = ratings.split(",").map(Number); 
-    console.log("Filtering tutors by ratings:", ratingList);g
+    console.log("Filtering tutors by ratings:", ratingList);
 
     const filteredTutors = await tutorModel.find({
       rating: { $in: ratingList }, 
