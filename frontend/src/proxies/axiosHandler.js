@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://192.168.100.110:3001",            // base url of backend server
+  baseURL: "http://localhost:3001",            // base url of backend server
   // timeout: 5000,                            // default timeout of 3 seconds
   headers: { "Content-Type": "application/json" },   // default content type, can be overridden such as in fileHandler.js
 });
