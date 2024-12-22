@@ -1,5 +1,25 @@
 import axiosInstance from "./axiosHandler";
 
+export const editTutorProfile = async (tutorId, updatedData) => {
+  try {
+    const response = await axiosInstance.put(`/tutorApi/editProfile/${tutorId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
+    console.log("Tutor profile updated: ", response);
+    return response.data.tutor;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error updating tutor profile:", error.response.data);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+};
+
+
 export const getTutorById = async (tutorId) => {
   try {
     const response = await axiosInstance.get(`/tutorApi/${tutorId}`, {

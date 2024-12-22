@@ -4,24 +4,61 @@ import styles from "./TutorProfile.module.css";
 import { getChat } from "../../../proxies/chats";
 import { useNavigate } from "react-router-dom";
 import StarRatings from "react-star-ratings";
+import { getTutorById, editTutorProfile } from "../../../proxies/tutors";
 
 export default function TutorProfile({
   isloggedIn,
   loggedInUser,
+  updateLoggedInUser,
   tutorInfo,
   img,
 }) {
+  const { firstName, lastName, fullName, bio, subjects, rating, rate } =
+    tutorInfo;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedfirstName, setEditedFirstName] = useState(firstName);
+  const [editedlastName, setEditedlastName] = useState(lastName);
+  const [editedBio, setEditedBio] = useState(bio);
+  const [editedSubjects, setEditedSubjects] = useState(subjects.join(", "));
+  const [editedRate, setEditedRate] = useState(rate);
   const [starRating, setStarRating] = useState(0);
-  const { fullName, bio, subjects, rating, rate } = tutorInfo;
-  const navigate = useNavigate();
 
-  function editProfile() {
-    //implement edit profile
-  }
+  const navigate = useNavigate();
 
   const changeRating = (newRating) => {
     setStarRating(newRating);
-  };
+  }
+
+  // Function to toggle editing mode
+  function editProfile() {
+    setIsEditing(!isEditing);
+  }
+
+  // Function to handle form submission (update profile)
+  async function handleSaveProfile() {
+    try {
+      const updatedTutorData = {
+        firstName: editedfirstName,
+        lastName: editedlastName,
+        fullName: `${editedfirstName} ${editedlastName}`,
+        bio: editedBio,
+        subjects: editedSubjects.split(", ").map((subject) => subject.trim()),
+        rate: editedRate,
+      };
+      tutorInfo = { ...tutorInfo, ...updatedTutorData };
+
+      // Call the API to update the profile
+      const tutor = await editTutorProfile(tutorInfo._id, updatedTutorData);
+      console.log("Profile updated successfully:", tutor);
+
+      updateLoggedInUser(tutor);
+
+      // After saving, set editing mode to false
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  }
 
   async function handleMessageButtonClicked() {
     // get the chat with the user
@@ -40,38 +77,96 @@ export default function TutorProfile({
     <div className={styles.tutorProfileContainer}>
       <div className={styles.tutorProfile}>
         <ProfileImage src={img} alt={"Profile image of the tutor"} />
-        <h2>{fullName}</h2>
-        {isloggedIn && <button onClick={editProfile}>Edit Profile</button>}
+        {!isEditing && <h2>{fullName}</h2>}
+        {isEditing && (
+          <>
+            <h2>
+              <input
+                type="text"
+                value={editedfirstName}
+                onChange={(e) => setEditedFirstName(e.target.value)}
+              />
+            </h2>
+            <h2>
+              <input
+                type="text"
+                value={editedlastName}
+                onChange={(e) => setEditedlastName(e.target.value)}
+              />
+            </h2>
+          </>
+        )}
+        {/* <h2>{isEditing ? (
+                    <input
+                        type="text"
+                        value={editedfirstName}
+                        onChange={(e) => setEditedFirstName(e.target.value)}
+                    />
+                ) : firstName}</h2>
+
+                <h2>{isEditing ? (
+                    <input
+                        type="text"
+                        value={editedlastName}
+                        onChange={(e) => setEditedlastName(e.target.value)}
+                    />
+                ) : lastName}</h2> */}
+        {isloggedIn && (
+          <button onClick={editProfile}>
+            {isEditing ? "Cancel" : "Edit Profile"}
+          </button>
+        )}
       </div>
 
       <div>
         <h2>Bio</h2>
-        <p>{bio}</p>
+        {isEditing ? (
+          <textarea
+            value={editedBio}
+            onChange={(e) => setEditedBio(e.target.value)}
+          />
+        ) : (
+          <p>{bio}</p>
+        )}
       </div>
 
       <div>
         <h2>What I Tutor</h2>
-        {subjects.map((item) => {
-          return <p>{item}</p>;
-        })}
+        {isEditing ? (
+          <textarea
+            value={editedSubjects}
+            onChange={(e) => setEditedSubjects(e.target.value)}
+          />
+        ) : (
+          subjects.map((item) => <p key={item}>{item}</p>)
+        )}
       </div>
 
       <div className={styles.reviewContainer}>
         <h2>Reviews</h2>
         <div className={styles.ratingContainer}>
           <h3 className={styles.rating}>{rating}</h3>
-          {/* <h3>--</h3> */}
         </div>
       </div>
 
       <div>
         <h2>Hourly Rate</h2>
-        <div className={styles.hourlyRate}>
+        {isEditing ? (
+          <input
+            type="number"
+            value={editedRate}
+            onChange={(e) => setEditedRate(e.target.value)}
+          />
+        ) : (
           <p>RM {rate}</p>
-        </div>
+        )}
       </div>
-      {tutorInfo.students.find((student)=>{
-        return student._id === loggedInUser._id
+
+      <div>
+        {isEditing && <button onClick={handleSaveProfile}>Save Profile</button>}
+      </div>
+      {tutorInfo.students.find((student) => {
+        return student._id === loggedInUser._id;
       }) && (
         <div className={styles.starContainer}>
           <StarRatings

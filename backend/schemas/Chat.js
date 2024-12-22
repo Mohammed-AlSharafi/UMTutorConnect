@@ -29,6 +29,12 @@ const messageSchema = new mongoose.Schema({
     type: participantSchema,
     required: true,
   },
+  chatId: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: function () {
+      return this.parent().id;
+    }
+  },
 });
 
 const chatSchema = new mongoose.Schema({
@@ -38,6 +44,10 @@ const chatSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  // read: {
+  //   type: Boolean,
+  //   default: false,
+  // },
 });
 
 // find or create chats between 2 users
@@ -107,6 +117,7 @@ chatSchema.methods.addMessage = async function (content, sender) {
 
   const newMessage = this.messages[this.messages.length - 1];
   this.lastMessage = newMessage.timestamp;    // update lastMessage time of chat so that latest chats can be shown first
+  // this.read = false;    // set chat to unread
   await this.save();
 
   // return the newly added message

@@ -73,6 +73,7 @@ export default function Profile() {
                             <TutorProfile
                                 isloggedIn={isloggedInUser}
                                 loggedInUser={loggedInUser}
+                                updateLoggedInUser={updateLoggedInUser}
                                 tutorInfo={user}
                                 img={tutorImg}
                             />
