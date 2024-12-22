@@ -156,7 +156,7 @@ const Authentication = () => {
       }
       else {
         // login as student
-        console.log('Tutor login');
+        console.log('Student login');
         try {
           const response = await authenticateStudent(username, password);
 
