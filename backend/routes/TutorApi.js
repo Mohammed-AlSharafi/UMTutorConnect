@@ -12,11 +12,11 @@ const { authMiddleware } = require('./middleware/AuthMiddleware');
 // Update tutor profile (PUT)
 router.put("/editProfile/:id", authMiddleware, async (req, res) => {
   try {
-    const { firstName, lastName, email, bio, subjects, rate } = req.body;
+    const { firstName, lastName, fullName, email, bio, subjects, rate } = req.body;
     const tutorId = req.params.id;
 
     // Check if tutor exists
-    const tutor = await tutorModel.findById(tutorId);
+    const tutor = await tutorModel.findById(tutorId).select("-password");
     if (!tutor) {
       return res.status(404).json({ message: 'Tutor not found' });
     }
@@ -24,6 +24,7 @@ router.put("/editProfile/:id", authMiddleware, async (req, res) => {
     // Update tutor details
     tutor.firstName = firstName || tutor.firstName;
     tutor.lastName = lastName || tutor.lastName;
+    tutor.fullName = fullName || tutor.fullName;
     tutor.email = email || tutor.email;
     tutor.bio = bio || tutor.bio;
     tutor.subjects = subjects || tutor.subjects;

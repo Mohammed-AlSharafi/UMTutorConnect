@@ -7,17 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { getTutorById, editTutorProfile } from '../../../proxies/tutors';
 
 
-
-
-export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img }) {
-    const { firstName, lastName, bio, subjects, rating, rate } = tutorInfo;
+export default function TutorProfile({ isloggedIn, loggedInUser, updateLoggedInUser, tutorInfo, img }) {
+    const { firstName, lastName, fullName, bio, subjects, rating, rate } = tutorInfo;
     const [isEditing, setIsEditing] = useState(false);
     const [editedfirstName, setEditedFirstName] = useState(firstName);
     const [editedlastName, setEditedlastName] = useState(lastName);
     const [editedBio, setEditedBio] = useState(bio);
     const [editedSubjects, setEditedSubjects] = useState(subjects.join(", "));
     const [editedRate, setEditedRate] = useState(rate);
-    
+
     const navigate = useNavigate();
 
     // Function to toggle editing mode
@@ -27,25 +25,29 @@ export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img 
 
     // Function to handle form submission (update profile)
     async function handleSaveProfile() {
-  try {
-    const updatedTutorData = {
-      firstName: editedfirstName,
-      lastName: editedlastName,
-      bio: editedBio,
-      subjects: editedSubjects.split(", ").map((subject) => subject.trim()),
-      rate: editedRate,
-    };
+        try {
+            const updatedTutorData = {
+                firstName: editedfirstName,
+                lastName: editedlastName,
+                fullName: `${editedfirstName} ${editedlastName}`,
+                bio: editedBio,
+                subjects: editedSubjects.split(", ").map((subject) => subject.trim()),
+                rate: editedRate,
+            };
+            tutorInfo = { ...tutorInfo, ...updatedTutorData };
 
-    // Call the API to update the profile
-    const response = await editTutorProfile(tutorInfo._id, updatedTutorData);
-    console.log("Profile updated successfully:", response);
+            // Call the API to update the profile
+            const tutor = await editTutorProfile(tutorInfo._id, updatedTutorData);
+            console.log("Profile updated successfully:", tutor);
 
-    // After saving, set editing mode to false
-    setIsEditing(false);
-  } catch (error) {
-    console.error("Error updating profile:", error);
-  }
-}
+            updateLoggedInUser(tutor)
+
+            // After saving, set editing mode to false
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        }
+    }
 
 
     async function handleMessageButtonClicked() {
@@ -65,7 +67,26 @@ export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img 
         <div className={styles.tutorProfileContainer}>
             <div className={styles.tutorProfile}>
                 <ProfileImage src={img} alt={"Profile image of the tutor"} />
-                <h2>{isEditing ? (
+                {!isEditing && <h2>{fullName}</h2>}
+                {isEditing && (
+                    <>
+                        <h2>
+                            <input
+                                type="text"
+                                value={editedfirstName}
+                                onChange={(e) => setEditedFirstName(e.target.value)}
+                            />
+                        </h2>
+                        <h2>
+                            <input
+                                type="text"
+                                value={editedlastName}
+                                onChange={(e) => setEditedlastName(e.target.value)}
+                            />
+                        </h2>
+                    </>
+                )}
+                {/* <h2>{isEditing ? (
                     <input
                         type="text"
                         value={editedfirstName}
@@ -79,7 +100,7 @@ export default function TutorProfile({ isloggedIn, loggedInUser, tutorInfo, img 
                         value={editedlastName}
                         onChange={(e) => setEditedlastName(e.target.value)}
                     />
-                ) : lastName}</h2>
+                ) : lastName}</h2> */}
                 {isloggedIn && <button onClick={editProfile}>{isEditing ? "Cancel" : "Edit Profile"}</button>}
             </div>
 

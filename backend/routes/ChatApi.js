@@ -1,10 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const {authMiddleware} = require("./middleware/AuthMiddleware");
+const { authMiddleware } = require("./middleware/AuthMiddleware");
 
 // import Chat model
 const chatModel = require('../schemas/Chat');
 
+// initialize Pusher
+const Pusher = require("pusher");
+const pusher = new Pusher({
+  appId: process.env.APP_ID,
+  key: process.env.KEY,
+  secret: process.env.SECRET,
+  cluster: process.env.CLUSTER,
+  useTLS: true
+});
 
 // set routes
 
@@ -35,15 +44,24 @@ router.post('/chats/:chatId/sendMessage', authMiddleware, async (req, res) => {
     }
 
     // prepare sender info following participant schema
-    const sender = { 
-      id: req.user.id, 
-      fullName: req.user.fullName, 
-      role: req.user.role 
+    const sender = {
+      id: req.user.id,
+      fullName: req.user.fullName,
+      role: req.user.role
     };
 
     // add message
     const message = await chat.addMessage(content, sender);
     console.log(message);
+
+    // trigger event to pusher
+    pusher.trigger("chats", "send-message-event", {
+      message,
+    }).then(() => {
+      console.log("Message sent successfully");
+    }).catch((error) => {
+      console.error("Error sending message:", error);
+    });
 
     res.status(200).json({ message: message });
   }
