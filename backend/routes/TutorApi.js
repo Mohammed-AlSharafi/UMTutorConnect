@@ -167,33 +167,37 @@ router.get("/search", authMiddleware, async (req, res) => {
 });
 
 // documentation test
-// this is a test by ethan
-// filter tutor by subjects logic
-router.get("/search", authMiddleware, async (req,res) => {
+// filter tutors by ratings logic
+router.get("/search", authMiddleware, async (req, res) => {
   try {
-    const {subjects} = req.query; // frontend to send a query list of the subjects
-  
+    const { ratings } = req.query; // frontend to send a query list of ratings
 
-  if (!subjects) {
-    return res.status(400).json({message: "Subjects are required for filtering!"});
+    if (!ratings) {
+      return res
+        .status(400)
+        .json({ message: "Ratings are required for filtering!" });
+    }
+
+    const ratingList = ratings.split(",").map(Number); 
+    console.log("Filtering tutors by ratings:", ratingList);g
+
+    const filteredTutors = await tutorModel.find({
+      rating: { $in: ratingList }, 
+    });
+
+    if (filteredTutors.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No tutors found for the selected ratings" });
+    }
+
+    res.status(200).json(filteredTutors);
+  } catch (error) {
+    console.error("Error filtering tutors:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
-
-  const subjectList = subjects.split(",");
-  console.log("Filtering tutors by subjects:", subjectList);
-
-  const filteredTutors = await tutorModel.find({
-    subjects: { $in: subjectList}, 
-  });
-
-  if (filteredTutors.length == 0) {
-    return res.status(404).json({message: "No tutors found for the selected subjects"});
-  }
-  res.status(200).json(filteredTutors);
-} catch (error) {
-  console.error("Error filtering tutors:", error);
-  res.status(500).json({message: "Server error", error: error.message})
-}
-
 });
 
 // get tutor by id
