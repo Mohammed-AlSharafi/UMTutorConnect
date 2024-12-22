@@ -8,7 +8,7 @@ export const editTutorProfile = async (tutorId, updatedData) => {
       }
     });
     console.log("Tutor profile updated: ", response);
-    return response.data;
+    return response.data.tutor;
   } catch (error) {
     if (error.response) {
       console.error("Error updating tutor profile:", error.response.data);
