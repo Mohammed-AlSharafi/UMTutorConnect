@@ -167,6 +167,7 @@ router.get("/search", authMiddleware, async (req, res) => {
 });
 
 // documentation test
+// will work when supplied a comma seperated values of ratings
 // filter tutors by ratings logic
 router.get("/search", authMiddleware, async (req, res) => {
   try {
