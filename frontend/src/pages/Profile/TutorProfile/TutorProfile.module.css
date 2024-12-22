@@ -41,3 +41,9 @@
     text-align: center;
     margin: 1rem 0rem;
 }
+
+.starContainer{
+    display: flex;
+    justify-content: center;
+}
+  
