@@ -5,22 +5,23 @@ import { getChat } from "../../../proxies/chats";
 import { useNavigate } from "react-router-dom";
 import StarRatings from "react-star-ratings";
 import { getTutorById, updateRating, editTutorProfile } from "../../../proxies/tutors";
+import { allowedFileTypes, getResourceType, getThumbnailUrl, uploadFile } from "../../../proxies/fileHandler";
 
 export default function TutorProfile({
   isloggedIn,
   loggedInUser,
   updateLoggedInUser,
   tutorInfo,
-  img,
 }) {
-  const { firstName, lastName, fullName, bio, subjects, averageRating, rate } = tutorInfo;
+  const { firstName, lastName, fullName, bio, profilePicture, subjects, averageRating, rate } = tutorInfo;
   const [isEditing, setIsEditing] = useState(false);
   const [editedfirstName, setEditedFirstName] = useState(firstName);
   const [editedlastName, setEditedlastName] = useState(lastName);
   const [editedBio, setEditedBio] = useState(bio);
   const [editedSubjects, setEditedSubjects] = useState(subjects.join(", "));
   const [editedRate, setEditedRate] = useState(rate);
-  
+  const [editedProfilePicture, setEditedProfilePicture] = useState(profilePicture);
+
   // set the initial star rating to the current users rating for this tutor
   const [starRating, setStarRating] = useState(
     tutorInfo.ratings.find((student) => {
@@ -42,7 +43,51 @@ export default function TutorProfile({
 
   // Function to toggle editing mode
   function editProfile() {
+    // if editing, means its being cancelled,
+    // so reset the edited values to the current values
+    if (isEditing) {
+      setEditedProfilePicture(profilePicture);
+      setEditedFirstName(firstName);
+      setEditedlastName(lastName);
+      setEditedBio(bio);
+      setEditedSubjects(subjects.join(", "));
+      setEditedRate(rate);
+    }
     setIsEditing(!isEditing);
+  }
+
+  async function handleProfilePictureChange(event) {
+    const fileToUpload = event.target.files[0];
+    if (!allowedFileTypes.includes(fileToUpload.type)) {
+      alert("Receipt: Invalid file format.");
+      // setFileToUpload(null);
+      return;
+    }
+    // ensure file size is below 3MB
+    if (fileToUpload.size > 3 * 1024 * 1024) {
+      alert("Receipt: File size too large.");
+      // setFileToUpload(null);
+      return;
+    }
+
+    // upload the file
+    try {
+      const resourceType = getResourceType(fileToUpload.type);
+      const uploadedFile = await uploadFile(fileToUpload, resourceType);
+      console.log("file that just got uploaded", uploadedFile);
+      setEditedProfilePicture(getThumbnailUrl(uploadedFile.secure_url));
+
+    } catch (error) {
+      // for now just alert
+      if (error.response) {
+        alert(`Error uploading file: ${error.response.data.error.message}.`);
+      }
+      else {
+        alert(`Error uploading file: ${error.message}.`);
+      }
+      // -> "Error uploading file: Empty file"
+      return;
+    }
   }
 
   // Function to handle form submission (update profile)
@@ -55,6 +100,7 @@ export default function TutorProfile({
         bio: editedBio,
         subjects: editedSubjects.split(", ").map((subject) => subject.trim()),
         rate: editedRate,
+        profilePicture: editedProfilePicture
       };
       tutorInfo = { ...tutorInfo, ...updatedTutorData };
 
@@ -87,7 +133,12 @@ export default function TutorProfile({
   return (
     <div className={styles.tutorProfileContainer}>
       <div className={styles.tutorProfile}>
-        <ProfileImage src={img} alt={"Profile image of the tutor"} />
+        <ProfileImage
+          src={isEditing ? editedProfilePicture : profilePicture}
+          alt="Profile Image of the student"
+          isEditing={isEditing}
+          onProfilePictureChange={handleProfilePictureChange}
+        />
         {!isEditing && <h2>{fullName}</h2>}
         {isEditing && (
           <>

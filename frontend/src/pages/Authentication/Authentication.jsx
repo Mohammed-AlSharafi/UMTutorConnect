@@ -27,7 +27,9 @@ const Authentication = () => {
     password: "",
     confirmPassword: "",
     bio: "",
-    role: "Student"
+    studyBackround: "",
+    role: "Student",
+    profilePicture: "https://res.cloudinary.com/ds7sfbksv/image/upload/v1734976936/98a0fe74-c9f7-4414-ae3f-d5e02372b45c.png",
   });
 
   const handleToggle = () => setIsRegistering(!isRegistering);
@@ -121,7 +123,6 @@ const Authentication = () => {
           }
         }
       }
-
 
     }
     if (!isRegistering) {

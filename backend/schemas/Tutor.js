@@ -25,6 +25,7 @@ const tutorSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        select: false, // Hide the password from query results by default
     },
     email: {
         type: String,
@@ -45,9 +46,10 @@ const tutorSchema = new mongoose.Schema({
             return this.firstName + " " + this.lastName;
         },
     },
-    // profilePicture: {
-    //     type: String,
-    // },
+    profilePicture: {
+        type: String,
+        default: "https://res.cloudinary.com/ds7sfbksv/image/upload/v1734976936/98a0fe74-c9f7-4414-ae3f-d5e02372b45c.png",
+    },
     bio: {
         type: String,
         required: true,
@@ -61,17 +63,6 @@ const tutorSchema = new mongoose.Schema({
         required: true,
         default: 10
     },
-    // rating: {
-    //     type: Number,
-    //     default: 0,
-    //     required: true,
-    //     validate: {
-    //         validator: function (v) {
-    //             return v >= 0 && v <= 5;
-    //         },
-    //         message: "Rating must be between 0 and 5",
-    //     },
-    // },
     ratings: {
         type: [ratingSchema],
         default: [],
@@ -93,9 +84,12 @@ const tutorSchema = new mongoose.Schema({
         required: true,
     },
     students: {
-        type: [studentSchema],
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Student", // Reference to the Student model
+        }],
         default: [],
-    }
+    },
     // enabled: {
     //     type: Boolean,
     //     default: true,

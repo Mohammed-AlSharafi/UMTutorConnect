@@ -8,10 +8,36 @@ const bcrypt = require("bcryptjs");
 const { studentModel } = require('../schemas/Student');  // student schema exports both model and schema
 const { authMiddleware } = require('./middleware/AuthMiddleware');
 
+
+// set routes
+
+
+// Update student profile (PUT)
+router.put("/editProfile/:id", authMiddleware, async (req, res) => {
+  try {
+    const updatedData = req.body;
+    const studentId = req.params.id;
+
+    // ensure logged in user is updating their own profile
+    if (req.user._id.toString() !== studentId) {
+      console.log("req.user._id: ", req.user._id);
+      console.log("studentId: ", studentId);
+      return res.status(403).json({ message: 'Unauthorized to update profile' });
+    }
+
+    const updatedStudent = await studentModel.findByIdAndUpdate(studentId, updatedData, { new: true });
+    res.status(200).json({ student: updatedStudent });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
 // Register student (POST)
 router.post("/register", async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password } = req.body;
+    const { firstName, lastName, username, email, password, studyBackround, profilePicture } = req.body;
 
     // Check if the student already exists
     const existingStudent = await studentModel.findOne({ username });
@@ -28,7 +54,9 @@ router.post("/register", async (req, res) => {
       lastName,
       username,
       email,
-      password
+      password,
+      studyBackround,
+      profilePicture,
     });
 
     // Save the student to the database
@@ -43,13 +71,11 @@ router.post("/register", async (req, res) => {
 });
 
 
-// set routes
-
 // get all students
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const items = await studentModel.find();
-    res.status(200).json({students: items});
+    res.status(200).json({ students: items });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
@@ -67,7 +93,8 @@ router.post("/authenticate", async (req, res) => {
     // find user
     const student = await studentModel.findOne({
       username: enteredUsername,
-    });
+    }).select("+password");
+
     if (!student) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
@@ -80,13 +107,13 @@ router.post("/authenticate", async (req, res) => {
     }
 
     // remove the password field from the tutor object
-    const { password, _v, ...tutorDataExcludingPassword } = student._doc;
-    console.log("tutorData: ", tutorDataExcludingPassword);
+    const { password, _v, ...studentExcludingPassword } = student._doc;
+    console.log("tutorData: ", studentExcludingPassword);
 
     // generate token (no expiry -- not recommneded)
-    const token = jwt.sign(tutorDataExcludingPassword, process.env.JWT_SECRET, {});
+    const token = jwt.sign(studentExcludingPassword, process.env.JWT_SECRET, {});
 
-    res.status(200).json({ user: tutorDataExcludingPassword, token: token });
+    res.status(200).json({ user: studentExcludingPassword, token: token });
   }
   catch (error) {
     console.error(error);

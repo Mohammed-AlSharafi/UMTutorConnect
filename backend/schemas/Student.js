@@ -9,6 +9,7 @@ const studentSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        select: false, // Hide the password from query results by default
     },
     email: {
         type: String,
@@ -33,9 +34,10 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // profilePicture: {
-    //     type: String,
-    // },
+    profilePicture: {
+        type: String,
+        default: "https://res.cloudinary.com/ds7sfbksv/image/upload/v1734976936/98a0fe74-c9f7-4414-ae3f-d5e02372b45c.png",
+    },
     role: {
         type: String,
         default: "Student",

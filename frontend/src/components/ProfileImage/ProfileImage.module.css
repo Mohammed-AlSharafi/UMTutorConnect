@@ -7,3 +7,16 @@
     border-radius: 50%;
     border: 2px solid #7c81d3;
 }
+
+/* make it more apparent that the image is clickable to change profilepicture */
+.editing img {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    /* border: none; */
+    border: 5px solid #44444444;
+}
+
+.editing img:hover {
+    opacity: 1;
+}
