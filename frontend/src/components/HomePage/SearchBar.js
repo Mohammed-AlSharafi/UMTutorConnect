@@ -9,20 +9,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { fetchTutorsBySubject } from "../../proxies/tutors";
 
-const SearchBar = ({ onSearch }) => {
+
+const SearchBar = ({ onSearch, fetchInitialTutors, tutors }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedRatings, setSelectedRatings] = useState([]);
 
   const handleSearch = async () => {
     try {
-      const tutors = await fetchTutorsBySubject(searchQuery);
-      console.log("Fetched tutors: ", tutors);
-      onSearch(tutors, searchQuery);
+      if (searchQuery === "") {
+        fetchInitialTutors();
+      } else {
+        const tutors = await fetchTutorsBySubject(searchQuery);
+        console.log("Fetched tutors: ", tutors);
+        onSearch(tutors, searchQuery);
+      }
     } catch (error) {
       // no tutors found for this subject
       if (error.response && error.response.status === 404) {
-        console.warn(`No tutors found for subject: ${searchQuery}`);
+        console.warn(`No tutors  found for subject: ${searchQuery}`);
         onSearch([], searchQuery);
       } else {
         console.error("Error fetching tutors:", error);
@@ -51,12 +56,32 @@ const SearchBar = ({ onSearch }) => {
   const handleApplyFilter = () => {
     // implementation to apply filter with selected ratings
     console.log("Selected Ratings: ", selectedRatings);
+    // setIsFilterOpen(false);
+    // // Call onSearch again or filter tutors here
+    // onSearch([], searchQuery, selectedRatings);
+    
+    if (selectedRatings.length === 0) {
+      console.log("selected ratings is 0")
+      handleSearch();
+    } else {
+      try {
+        const filteredTutors = tutors.filter((tutor) => {
+          const roundedRating = Math.round(tutor.rating);
+          return selectedRatings.includes(roundedRating);
+        });
+        console.log("Filtered Tutors: ", filteredTutors);
+        onSearch(filteredTutors, searchQuery);
+        
+      } catch (error) {
+        console.error("Error applying rating filter: ", error);
+      }
+    }
     setIsFilterOpen(false);
-    // Call onSearch again or filter tutors here
   };
 
-  const handleClearFilter = () => {
+  const handleClearFilter = async () => {
     setSelectedRatings([]);
+    handleSearch();
   };
 
   const renderStars = (rating) => {
