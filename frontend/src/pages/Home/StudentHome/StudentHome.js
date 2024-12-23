@@ -28,11 +28,11 @@ export default function StudentHome() {
   };
 
   const handleSearchResults = (searchResults, searchQuery) => {
-    if (searchQuery === "") {
-      setTitle("Tutor List");
-      fetchInitialTutors();
-      return;
-    }
+    // if (searchQuery === "") {
+    //   setTitle("Tutor List");
+    //   fetchInitialTutors();
+    //   return;
+    // }
 
     console.log("Tutors received in Home: ", searchResults);
     setTutors(searchResults);
@@ -41,7 +41,7 @@ export default function StudentHome() {
 
   return (
     <div className={styles.container}>
-      <SearchBar onSearch={handleSearchResults} />
+      <SearchBar onSearch={handleSearchResults} fetchInitialTutors={fetchInitialTutors} tutors={tutors}/>
       <UserList users={tutors} title={title} />
     </div>
   );
