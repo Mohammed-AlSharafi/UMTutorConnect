@@ -49,13 +49,6 @@ function Header() {
               >
                 Communication
               </Link>
-              <Link
-                to="/settings"
-                className={`${styles.navLink} ${location.pathname === '/settings' ? styles.active : ''}`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Settings
-              </Link>
             </nav>
             {isAuthenticated() && (
               <button className={styles.logoutButton} onClick={logout}>Logout</button>

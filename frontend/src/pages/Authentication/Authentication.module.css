@@ -33,7 +33,6 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 2rem;
   height: 100%;
 }
 
@@ -89,7 +88,8 @@
 }
 
 .inputField,
-.bioField {
+.bioField,
+.studyBackround {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #ccc;
@@ -97,7 +97,7 @@
   font-size: 1rem;
 }
 
-.bioField {
+.bioField, .studyBackround {
   min-height: 100px;
   resize: vertical;
 }
