@@ -47,3 +47,25 @@
     justify-content: center;
 }
   
+.star {
+    color: #FFD700;
+}
+
+.tutorProfileContainer input {
+    all: onset; /* Reset input to look like plain text */
+    font-size: 1.5rem; /* Match the font size of <h2> */
+    font-weight: bold; /* Optional: Adjust based on your <h2> styles */
+    width: 100%; /* Ensure the input spans the same width */
+    /* border-bottom: 2px solid #ccc; Optional: Add a subtle underline for clarity */
+    margin-bottom: 0.5rem; /* Match spacing */
+}
+
+.profileDetailsContainer input {
+    all: inset; /* Reset input to look like plain text */
+    font-size: 1rem; /* Match the font size of <p> */
+    line-height: 1.5; /* Match line height */
+    color: inherit; /* Inherit text color from parent */
+    width: 100%; /* Full width */
+    /* border-bottom: 1px solid #ccc; Subtle underline */
+    margin-bottom: 0.5rem; /* Match spacing */
+}
