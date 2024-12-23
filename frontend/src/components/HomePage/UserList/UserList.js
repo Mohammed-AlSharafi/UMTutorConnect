@@ -1,11 +1,8 @@
 import UserCard from "../UserCard/UserCard";
 import styles from "./UserList.module.css";
-import { useAuth } from "../../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 
 const UserList = ({ users, title }) => {
-	const { loggedInUser } = useAuth();
-
 	return (
 		<div className={styles.UserList}>
 			<h1 className={styles.title}>{title}</h1>
@@ -17,9 +14,9 @@ const UserList = ({ users, title }) => {
 							name={foundUser.fullName}
 							subjects={foundUser.subjects}
 							rate={foundUser.rate}
-							rating = {foundUser.rating}
+							averageRating={foundUser.averageRating}
 							img={foundUser.img}
-							role={loggedInUser.role}
+							role={foundUser.role}
 						/>
 					</Link>
 				))}

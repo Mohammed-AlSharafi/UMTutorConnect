@@ -172,3 +172,23 @@ export const removeStudent = async (studentId, tutorId) => {
     throw error;
   }
 }
+
+export const updateRating = async (tutorId, studentId, newRating) => {
+  try {
+    const response = await axiosInstance.put(`tutorApi/updateRating/${tutorId}`, { studentId, newRating }, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
+    console.log("Rating updated: ", response);
+    return response.data.tutor;
+
+  } catch (error) {
+    if (error.response) {
+      console.error("Error updating rating:", error.response.data);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+}

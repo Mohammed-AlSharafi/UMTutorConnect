@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./UserCard.module.css";
 
-const UserCard = ({ name, subjects, rate, rating, img, role }) => {
+const UserCard = ({ name, subjects, rate, averageRating, img, role }) => {
   return (
     <div className={styles.userCard}>
       <h3 className={styles.userName}>{name}</h3>
-      {role === "Student" && (
+      {role === "Tutor" && (
         <>
           <div className={styles.subjects}>
             {Array.isArray(subjects) && subjects.length > 0 ? (
