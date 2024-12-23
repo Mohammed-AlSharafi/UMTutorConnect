@@ -29,6 +29,10 @@ const studentSchema = new mongoose.Schema({
             return this.firstName + " " + this.lastName;
         },
     },
+    background: {
+        type: String,
+        required: true,
+    },
     // profilePicture: {
     //     type: String,
     // },
