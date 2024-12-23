@@ -23,7 +23,7 @@ function ChatArea({ chat, onSendMessage, userId }) {
   return (
     <div className={styles.chatArea}>
       <div className={styles.chatHeader}>
-        <Link to={`/profile/${chat.otherParticipant.role}/${chat.otherParticipant.id}`}>
+        <Link to={`/profile/${chat.otherParticipant.role}/${chat.otherParticipant.id}`} className={styles.link}>
           <span className={styles.name}>{chat.fullName}</span>
         </Link>
       </div>
