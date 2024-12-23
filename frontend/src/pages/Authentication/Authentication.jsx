@@ -278,6 +278,16 @@ const Authentication = () => {
                   required
                 />
               )}
+              {isRegistering && !isTutor && (
+                <textarea
+                id="studyBio"
+                value={formValues.studyBackround}
+                onChange={handleChange}
+                placeholder="Your Study Background"
+                className={styles.studyBackround}
+                required
+              />
+              )}
               {isRegistering && isTutor && (
                 <>
                   <textarea
