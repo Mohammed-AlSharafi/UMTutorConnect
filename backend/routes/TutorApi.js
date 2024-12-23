@@ -71,7 +71,7 @@ router.put("/updateRating/:tutorId", authMiddleware, async (req, res) => {
 // Register Tutor (POST)
 router.post("/register", async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password, bio, subjects, rate } = req.body;
+    const { firstName, lastName, username, email, password, bio, profilePicture, subjects, rate } = req.body;
 
     // Check if the tutor already exists
     const existingTutor = await tutorModel.findOne({ username });
@@ -91,7 +91,8 @@ router.post("/register", async (req, res) => {
       password,
       bio,
       subjects,
-      rate
+      rate,
+      profilePicture,
     });
 
     // Save the tutor to the database

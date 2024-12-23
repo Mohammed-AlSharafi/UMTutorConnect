@@ -2,20 +2,56 @@ import ProfileImage from "../../../components/ProfileImage/ProfileImage";
 import styles from "./StudentProfile.module.css";
 import { addStudent, removeStudent } from "../../../proxies/tutors";
 import { editStudentProfile } from "../../../proxies/students";
+import { allowedFileTypes, getResourceType, getThumbnailUrl, uploadFile } from "../../../proxies/fileHandler";
 import { useState } from "react";
 
 
-export default function StudentProfile({ isloggedIn, loggedInUser, updateLoggedInUser, img, studentInfo }) {
+export default function StudentProfile({ isloggedIn, loggedInUser, updateLoggedInUser, studentInfo }) {
 
-    const { _id, firstName, lastName, background, fullName, role } = studentInfo;
+    const { _id, firstName, lastName, background, profilePicture, fullName, role } = studentInfo;
     const [isEditing, setIsEditing] = useState(false);
     const [editedfirstName, setEditedFirstName] = useState(firstName);
     const [editedlastName, setEditedlastName] = useState(lastName);
     const [editedBackground, setEditedBackground] = useState(background);
+    const [editedProfilePicture, setEditedProfilePicture] = useState(profilePicture);
 
     function handleEditProfile() {
         //implement edit profile
         setIsEditing(!isEditing);
+    }
+
+    async function handleProfilePictureChange(event) {
+        const fileToUpload = event.target.files[0];
+        if (!allowedFileTypes.includes(fileToUpload.type)) {
+            alert("Receipt: Invalid file format.");
+            // setFileToUpload(null);
+            return;
+        }
+        // ensure file size is below 3MB
+        if (fileToUpload.size > 3 * 1024 * 1024) {
+            alert("Receipt: File size too large.");
+            // setFileToUpload(null);
+            return;
+        }
+
+        // upload the file
+        try {
+            const resourceType = getResourceType(fileToUpload.type);
+            const uploadedFile = await uploadFile(fileToUpload, resourceType);
+            console.log("file that just got uploaded", uploadedFile);
+            setEditedProfilePicture(getThumbnailUrl(uploadedFile.secure_url));
+
+        } catch (error) {
+            // for now just alert
+            if (error.response) {
+                alert(`Error uploading file: ${error.response.data.error.message}.`);
+            }
+            else {
+                alert(`Error uploading file: ${error.message}.`);
+            }
+            // -> "Error uploading file: Empty file"
+            return;
+        }
     }
 
     async function handleSaveProfile() {
@@ -26,6 +62,7 @@ export default function StudentProfile({ isloggedIn, loggedInUser, updateLoggedI
                 lastName: editedlastName,
                 fullName: `${editedfirstName} ${editedlastName}`,
                 background: editedBackground,
+                profilePicture: editedProfilePicture
             };
             studentInfo = { ...studentInfo, ...updatedStudentData };
 
@@ -79,7 +116,12 @@ export default function StudentProfile({ isloggedIn, loggedInUser, updateLoggedI
     return (
         <div>
             <div className={styles.studentProfile}>
-                <ProfileImage src={img} alt="Profile Image of the student" />
+                <ProfileImage
+                    src={isEditing ? editedProfilePicture : profilePicture}
+                    alt="Profile Image of the student"
+                    isEditing={isEditing}
+                    onProfilePictureChange={handleProfilePictureChange}
+                />
                 {!isEditing && <h2>{fullName}</h2>}
                 {isEditing && (
                     <>

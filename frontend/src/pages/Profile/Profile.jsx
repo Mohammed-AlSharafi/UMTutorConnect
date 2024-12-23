@@ -67,7 +67,6 @@ export default function Profile() {
                                 loggedInUser={loggedInUser}
                                 updateLoggedInUser={updateLoggedInUser}
                                 studentInfo={user}
-                                img={studentImg}
                             />
                         ) : (
                             <TutorProfile
@@ -75,7 +74,6 @@ export default function Profile() {
                                 loggedInUser={loggedInUser}
                                 updateLoggedInUser={updateLoggedInUser}
                                 tutorInfo={user}
-                                img={tutorImg}
                             />
                         )}
                     </div>
