@@ -3,5 +3,61 @@
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    width: 100%;
+    gap: .25rem; 
+}
+
+.studentProfileContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 50vh;
+    justify-content: center;
+    align-items: center;
+    padding: 0rem; /* Add padding to ensure consistent spacing */
+}
+
+.studentProfileContainer img {
+    display: block;
+    max-width: 100%;
+    width: 150px; /* Fixed image size */
+    border-radius: 50%; /* Rounded edges for the profile image */
+}
+
+.profileDetailsContainer {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 0rem;
+    border-radius: 1rem;
+    margin: 1rem 0;
+}
+
+.profileDetailsContainer h2 {
+    margin: 0;
+    font-size: 1.5rem; 
+}
+
+.profileDetailsContainer p {
+    margin: 0.25rem 0;
+    font-size: 1rem; 
+    line-height: 1.5;
+}
+
+.studentProfileContainer input {
+    all: onset; /* Reset input to look like plain text */
+    font-size: 1.5rem; /* Match the font size of <h2> */
+    font-weight: bold; /* Optional: Adjust based on your <h2> styles */
+    width: 100%; /* Ensure the input spans the same width */
+    /* border-bottom: 2px solid #ccc; Optional: Add a subtle underline for clarity */
+    margin-bottom: 0.5rem; /* Match spacing */
+}
+
+.profileDetailsContainer input {
+    all: inset; /* Reset input to look like plain text */
+    font-size: 1rem; /* Match the font size of <p> */
+    line-height: 1.5; /* Match line height */
+    color: inherit; /* Inherit text color from parent */
+    width: 100%; /* Full width */
+    /* border-bottom: 1px solid #ccc; Subtle underline */
+    margin-bottom: 0.5rem; /* Match spacing */
 }

@@ -8,6 +8,37 @@ const bcrypt = require("bcryptjs");
 const { studentModel } = require('../schemas/Student');  // student schema exports both model and schema
 const { authMiddleware } = require('./middleware/AuthMiddleware');
 
+
+// Update Student profile (PUT)
+router.put("/editProfile/:id", authMiddleware, async (req, res) => {
+  try {
+    const { firstName, lastName, username, email, password } = req.body;
+    const studentId = req.params.id;
+
+    // Check if studemt exists
+    const student  = await studentModel.findById(studentId).select("-password");
+    if (!student ) {
+      return res.status(404).json({ message: 'Student  not found' });
+    }
+
+    // Update Student details
+    student.firstName = firstName || student.firstName;
+    student.lastName = lastName || student.lastName;
+    student.fullName = firstName.trim() && lastName.trim() ? `${firstName} ${lastName}` : `${student.firstName} ${student.lastName}`;
+    student.username = username || student.username;
+    student.email = email || student.email;
+
+    // Save updated Student
+    await student.save();
+
+    // Send response
+    res.status(200).json({ message: 'Student profile updated successfully', student });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
+
 // Register student (POST)
 router.post("/register", async (req, res) => {
   try {
