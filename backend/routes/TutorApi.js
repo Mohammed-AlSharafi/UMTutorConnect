@@ -41,6 +41,33 @@ router.put("/editProfile/:id", authMiddleware, async (req, res) => {
   }
 });
 
+router.put("/updateRating/:tutorId", authMiddleware, async (req, res) => {
+  try {
+    const { studentId, newRating } = req.body;
+    const tutorId = req.params.tutorId;
+
+    console.log("studentId: ", studentId);
+    console.log("newRating: ", newRating);
+
+    // validate the studentId matches the logged in user
+    if (!req.user || req.user.id !== studentId) {
+      return res.status(403).json({ message: 'Unauthorized to update rating' });
+    }
+
+    const tutor = await tutorModel.findById(tutorId);
+    if (!tutor) {
+      return res.status(404).json({ message: 'Tutor not found' });
+    }
+
+    await tutor.updateRating(studentId, newRating);
+
+    res.status(200).json({ message: 'Rating updated successfully', tutor: tutor });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
 
 // Register Tutor (POST)
 router.post("/register", async (req, res) => {
@@ -131,7 +158,7 @@ router.get("/", authMiddleware, async (req, res) => {
 router.get("/topTutors", authMiddleware, async (req, res) => {
   try {
     // get the tutors with the highest ratings
-    const topTutors = await tutorModel.find().sort({ rating: -1 }).limit(15).exec();
+    const topTutors = await tutorModel.find().sort({ averageRating: -1 }).limit(15).exec();
 
     res.status(200).json(topTutors);
   } catch (error) {
@@ -169,30 +196,30 @@ router.get("/search", authMiddleware, async (req, res) => {
 // documentation test
 // this is a test by ethan
 // filter tutor by subjects logic
-router.get("/search", authMiddleware, async (req,res) => {
+router.get("/search", authMiddleware, async (req, res) => {
   try {
-    const {subjects} = req.query; // frontend to send a query list of the subjects
-  
+    const { subjects } = req.query; // frontend to send a query list of the subjects
 
-  if (!subjects) {
-    return res.status(400).json({message: "Subjects are required for filtering!"});
+
+    if (!subjects) {
+      return res.status(400).json({ message: "Subjects are required for filtering!" });
+    }
+
+    const subjectList = subjects.split(",");
+    console.log("Filtering tutors by subjects:", subjectList);
+
+    const filteredTutors = await tutorModel.find({
+      subjects: { $in: subjectList },
+    });
+
+    if (filteredTutors.length == 0) {
+      return res.status(404).json({ message: "No tutors found for the selected subjects" });
+    }
+    res.status(200).json(filteredTutors);
+  } catch (error) {
+    console.error("Error filtering tutors:", error);
+    res.status(500).json({ message: "Server error", error: error.message })
   }
-
-  const subjectList = subjects.split(",");
-  console.log("Filtering tutors by subjects:", subjectList);
-
-  const filteredTutors = await tutorModel.find({
-    subjects: { $in: subjectList}, 
-  });
-
-  if (filteredTutors.length == 0) {
-    return res.status(404).json({message: "No tutors found for the selected subjects"});
-  }
-  res.status(200).json(filteredTutors);
-} catch (error) {
-  console.error("Error filtering tutors:", error);
-  res.status(500).json({message: "Server error", error: error.message})
-}
 
 });
 

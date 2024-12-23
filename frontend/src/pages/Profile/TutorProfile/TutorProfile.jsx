@@ -4,7 +4,7 @@ import styles from "./TutorProfile.module.css";
 import { getChat } from "../../../proxies/chats";
 import { useNavigate } from "react-router-dom";
 import StarRatings from "react-star-ratings";
-import { getTutorById, editTutorProfile } from "../../../proxies/tutors";
+import { getTutorById, updateRating, editTutorProfile } from "../../../proxies/tutors";
 
 export default function TutorProfile({
   isloggedIn,
@@ -13,19 +13,30 @@ export default function TutorProfile({
   tutorInfo,
   img,
 }) {
-  const { firstName, lastName, fullName, bio, subjects, rating, rate } =
-    tutorInfo;
+  const { firstName, lastName, fullName, bio, subjects, averageRating, rate } = tutorInfo;
   const [isEditing, setIsEditing] = useState(false);
   const [editedfirstName, setEditedFirstName] = useState(firstName);
   const [editedlastName, setEditedlastName] = useState(lastName);
   const [editedBio, setEditedBio] = useState(bio);
   const [editedSubjects, setEditedSubjects] = useState(subjects.join(", "));
   const [editedRate, setEditedRate] = useState(rate);
-  const [starRating, setStarRating] = useState(0);
+  
+  // set the initial star rating to the current users rating for this tutor
+  const [starRating, setStarRating] = useState(
+    tutorInfo.ratings.find((student) => {
+      return student.studentId === loggedInUser._id;
+    }
+    )?.rating || 0
+  )
 
   const navigate = useNavigate();
 
-  const changeRating = (newRating) => {
+  const changeRating = async (newRating) => {
+    const updatedTutorInfo = await updateRating(tutorInfo._id, loggedInUser._id, newRating);
+    console.log("updatedTutorInfo: ", updatedTutorInfo)
+    tutorInfo.averageRating = updatedTutorInfo.averageRating;
+
+    // update state after updating tutorInfo
     setStarRating(newRating);
   }
 
@@ -145,7 +156,7 @@ export default function TutorProfile({
       <div className={styles.reviewContainer}>
         <h2>Reviews</h2>
         <div className={styles.ratingContainer}>
-          <h3 className={styles.rating}>{rating}</h3>
+          <h3 className={styles.rating}>{averageRating}</h3>
         </div>
       </div>
 
@@ -165,19 +176,20 @@ export default function TutorProfile({
       <div>
         {isEditing && <button onClick={handleSaveProfile}>Save Profile</button>}
       </div>
+
       {tutorInfo.students.find((student) => {
         return student._id === loggedInUser._id;
       }) && (
-        <div className={styles.starContainer}>
-          <StarRatings
-            rating={starRating}
-            starRatedColor="gold"
-            changeRating={changeRating}
-            numberOfStars={5}
-            name="rating"
-          />
-        </div>
-      )}
+          <div className={styles.starContainer}>
+            <StarRatings
+              rating={starRating}
+              starRatedColor="gold"
+              changeRating={changeRating}
+              numberOfStars={5}
+              name="rating"
+            />
+          </div>
+        )}
       {!isloggedIn && (
         <div className={styles.contactSection}>
           <h2>Contact Me:</h2>

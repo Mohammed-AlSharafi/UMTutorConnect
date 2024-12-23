@@ -1,6 +1,21 @@
 const mongoose = require("mongoose");
 const { studentSchema } = require("./Student");
 
+
+const ratingSchema = new mongoose.Schema({
+    studentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student", // Reference to the Student model
+        required: true,
+    },
+    rating: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 5, // Restrict rating values between 0 and 5
+    },
+});
+
 const tutorSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -46,7 +61,22 @@ const tutorSchema = new mongoose.Schema({
         required: true,
         default: 10
     },
-    rating: {
+    // rating: {
+    //     type: Number,
+    //     default: 0,
+    //     required: true,
+    //     validate: {
+    //         validator: function (v) {
+    //             return v >= 0 && v <= 5;
+    //         },
+    //         message: "Rating must be between 0 and 5",
+    //     },
+    // },
+    ratings: {
+        type: [ratingSchema],
+        default: [],
+    },
+    averageRating: {
         type: Number,
         default: 0,
         required: true,
@@ -79,6 +109,29 @@ const tutorSchema = new mongoose.Schema({
     //     default: Date.now,
     // },
 })
+
+// method to be used to update ratings
+tutorSchema.methods.updateRating = async function (studentId, newRating) {
+    // "this" refers to the current tutor document
+    const existingRating = this.ratings.find(
+        (rating) => rating.studentId.toString() === studentId
+    );
+
+    if (existingRating) {
+        // Update the existing rating
+        existingRating.rating = newRating;
+    } else {
+        // Add a new rating
+        this.ratings.push({ studentId, rating: newRating });
+    }
+
+    // Recalculate the average rating
+    const totalRatings = this.ratings.reduce((sum, r) => sum + r.rating, 0);
+    this.averageRating = totalRatings / this.ratings.length;
+
+    await this.save();
+    return this;
+};
 
 const tutorModel = mongoose.model("Tutor", tutorSchema);
 module.exports = tutorModel;
