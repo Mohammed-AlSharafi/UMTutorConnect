@@ -14,8 +14,9 @@
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid #ccc;
-  background-color: #f0f0f0;
+  background-color: #545B9E;
   border-radius: 0.5rem 0.5rem 0 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .avatar {
@@ -25,7 +26,19 @@
 }
 
 .name {
+  font-size: 1.4rem;
   font-weight: bold;
+  color: #f0f0f0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.name:hover {
+  color: #FFD700;
+}
+
+.link {
+  text-decoration: none; /* Removes underline from the Link */
 }
 
 .messagesWrapper {

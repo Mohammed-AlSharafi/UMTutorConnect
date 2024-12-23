@@ -145,8 +145,28 @@ const Communication = () => {
 
     // conditionally render MessageList and ChatArea components chats selectedChats and filteredChats are available
     return (
+        // <div className={styles.container}>
+        //     {(chats && selectedChat && filteredChats) && (
+        //         <>
+        //             <MessageList
+        //                 chats={filteredChats}
+        //                 selectedChat={selectedChat}
+        //                 onSelectChat={handleSelectChat}
+        //                 onSearch={handleSearch}
+        //             />
+        //             <ChatArea
+        //                 chat={selectedChat}
+        //                 onSendMessage={handleSendMessage}
+        //                 userId={loggedInUser._id}
+        //             />
+        //         </>
+        //     )}
+        // </div>
+
+
+        // added conditional rendering for if there are no chats available, a placeholder will be displayed instead
         <div className={styles.container}>
-            {(chats && selectedChat && filteredChats) && (
+            {chats && chats.length > 0 ? (
                 <>
                     <MessageList
                         chats={filteredChats}
@@ -160,6 +180,14 @@ const Communication = () => {
                         userId={loggedInUser._id}
                     />
                 </>
+            ) : (
+                <div className={styles.placeholder}>
+                    <div className={styles.placeholderContent}>
+
+                        <h2>No Messages Yet</h2>
+                        <p>Start a conversation to see your messages here.</p>
+                    </div>
+                </div>
             )}
         </div>
     );
