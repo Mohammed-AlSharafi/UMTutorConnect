@@ -32,12 +32,13 @@
     border-radius: 1rem;
     max-width: 350px;
     min-width: 250px;
-    width: 100%;
+    width: 1000%;
     margin: 1rem 0;
 }
 
 .profileDetailsContainer h2 {
     margin: 0;
+    gap: 0.5rem;
 }
 
 .profileDetailsContainer p {
@@ -48,8 +49,10 @@
 }
 
 .profileDetailsContainer button {
-    background-color: #040A79;
+    background-color: #545B9E;
     border-radius: .5rem;
     padding: 10px 15px;
     font-weight: bold;
+    margin-right: .5rem;
+    margin-left: .5rem;
 }

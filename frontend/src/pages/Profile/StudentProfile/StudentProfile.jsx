@@ -114,61 +114,90 @@ export default function StudentProfile({ isloggedIn, loggedInUser, updateLoggedI
     }
 
     return (
-        <div>
-            <div className={styles.studentProfile}>
-                <ProfileImage
-                    src={isEditing ? editedProfilePicture : profilePicture}
-                    alt="Profile Image of the student"
-                    isEditing={isEditing}
-                    onProfilePictureChange={handleProfilePictureChange}
-                />
-                {!isEditing && <h2>{fullName}</h2>}
-                {isEditing && (
-                    <>
-                        <h2>
-                            <input
-                                type="text"
-                                value={editedfirstName}
-                                onChange={(e) => setEditedFirstName(e.target.value)}
-                            />
-                        </h2>
-                        <h2>
-                            <input
-                                type="text"
-                                value={editedlastName}
-                                onChange={(e) => setEditedlastName(e.target.value)}
-                            />
-                        </h2>
-                    </>
-                )}
-                <p>{role}</p>
-                {isloggedIn && (
-                    <button onClick={handleEditProfile}>
-                        {isEditing ? "Cancel" : "Edit Profile"}
-                    </button>
-                )}
-                {!isloggedIn && !containsStudent(loggedInUser, _id) && <button onClick={handleAddStudent}>Add Student</button>}
-                {!isloggedIn && containsStudent(loggedInUser, _id) && <button onClick={handleRemoveStudent}>Remove Student</button>}
-            </div>
+      <div className={styles.studentProfileContainer}>
+          <div className={styles.studentProfile}>
+              <ProfileImage
+                  src={isEditing ? editedProfilePicture : profilePicture}
+                  alt="Profile Image of the student"
+                  isEditing={isEditing}
+                  onProfilePictureChange={handleProfilePictureChange}
+              />
+              {!isEditing && <h2>{fullName}</h2>}
+              {isEditing && (
+                  <>
+                      {/* Display input fields for first and last name when editing */}
+                      <h2>
+                          <input
+                              type="text"
+                              value={editedfirstName}
+                              onChange={(e) => setEditedFirstName(e.target.value)}
+                          />
+                      </h2>
+                      <h2>
+                          <input
+                              type="text"
+                              value={editedlastName}
+                              onChange={(e) => setEditedlastName(e.target.value)}
+                          />
+                      </h2>
+                  </>
+              )}
+              <p>{role}</p>
+  
+              
+  
+              {/* Save button and edit button were separate and not aligned */}
+              {/* {isloggedIn && (
+                  <button onClick={handleEditProfile}>
+                      {isEditing ? "Cancel" : "Edit Profile"}
+                  </button>
+              )}
+              {!isloggedIn && !containsStudent(loggedInUser, _id) && <button onClick={handleAddStudent}>Add Student</button>}
+              {!isloggedIn && containsStudent(loggedInUser, _id) && <button onClick={handleRemoveStudent}>Remove Student</button>} */}
+          </div>
+  
+          <div>
+              <h2>Background</h2>
+              {isEditing ? (
+                  <textarea
+                      value={editedBackground}
+                      onChange={(e) => setEditedBackground(e.target.value)}
+                  />
+              ) : (
+                  <p>{background}</p>
+              )}
+          </div>
 
-            <div>
-                <h2>Background</h2>
-                {isEditing ? (
-                    <textarea
-                        value={editedBackground}
-                        onChange={(e) => setEditedBackground(e.target.value)}
-                    />
-                ) : (
-                    <p>{background}</p>
-                )}
-                {/* <p>{background}</p> */}
-                {/* <p>2nd Year Bachelor of Computer Science</p>
-                <p>Artificial Intelligence</p> */}
+          {/* Action Buttons */}
+          <div className={styles.actionButtons}>
+                  {isloggedIn && (
+                  <>
+                      <button onClick={handleEditProfile}>
+                          {isEditing ? "Cancel" : "Edit Profile"}
+                      </button>
+                      {isEditing && (
+                          <button onClick={handleSaveProfile}>Save Profile</button>
+                      )}
+                  </>
+                  )}
+                  {!isloggedIn && !containsStudent(loggedInUser, _id) && (
+                      <button onClick={handleAddStudent}>Add Student</button>
+                  )}
+                  {!isloggedIn && containsStudent(loggedInUser, _id) && (
+                      <button onClick={handleRemoveStudent}>Remove Student</button>
+                  )}
+              </div>
+          
+  
+              {/* <p>{background}</p> */}
+              {/* <p>2nd Year Bachelor of Computer Science</p>
+              <p>Artificial Intelligence</p> */}
+  
+              {/* <div>
+                  {isEditing && <button onClick={handleSaveProfile}>Save Profile</button>}
+              </div> */}
 
-                <div>
-                    {isEditing && <button onClick={handleSaveProfile}>Save Profile</button>}
-                </div>
-            </div>
-        </div>
-    );
+      </div>
+  );
+  
 }
