@@ -8,9 +8,8 @@ import { fetchTopTutors } from "../../../proxies/tutors";
 export default function StudentHome() {
   const { loggedInUser } = useAuth();
   const [tutors, setTutors] = useState([]);
+  const [allTutorsBySubject, setAllTutorsBySubject] = useState([]);
   const [title, setTitle] = useState();
-  // const [subject, setSubject] = useState("");
-  // const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     fetchInitialTutors();
@@ -27,21 +26,27 @@ export default function StudentHome() {
     }
   };
 
-  const handleSearchResults = (searchResults, searchQuery) => {
-    // if (searchQuery === "") {
-    //   setTitle("Tutor List");
-    //   fetchInitialTutors();
-    //   return;
-    // }
-
+  const handleSearchResults = (searchResults) => {
     console.log("Tutors received in Home: ", searchResults);
+    setAllTutorsBySubject(searchResults);
     setTutors(searchResults);
     setTitle(`Tutors found: ` + searchResults.length);
   };
 
+  const handleFilterResults = (filterResults) => {
+    console.log("Filtered tutors received in Home: ", filterResults);
+    setTutors(filterResults)
+    setTitle(`Tutors found: ` + filterResults.length);
+  }
+
   return (
     <div className={styles.container}>
-      <SearchBar onSearch={handleSearchResults} fetchInitialTutors={fetchInitialTutors} tutors={tutors}/>
+      <SearchBar 
+      onSearch={handleSearchResults} 
+      fetchInitialTutors={fetchInitialTutors}
+      onFilter={handleFilterResults}
+      tutors={tutors}
+      allTutorsBySubject={allTutorsBySubject}/>
       <UserList users={tutors} title={title} />
     </div>
   );
