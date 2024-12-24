@@ -15,32 +15,31 @@ router.put("/editProfile/:id", authMiddleware, async (req, res) => {
     const { firstName, lastName, fullName, email, bio, subjects, rate } = req.body;
     const tutorId = req.params.id;
 
+    // Check if logged in user is updating their own profile
+    if (!req.user || req.user._id.toString() !== tutorId) {
+      return res.status(403).json({ message: 'Unauthorized to update profile' });
+    }
+
     // Check if tutor exists
-    const tutor = await tutorModel.findById(tutorId).select("-password");
-    if (!tutor) {
+    const updatedTutor = await tutorModel.findByIdAndUpdate(tutorId, req.body, { new: true })
+      .populate('students');
+
+    if (!updatedTutor) {
       return res.status(404).json({ message: 'Tutor not found' });
     }
 
-    // Update tutor details
-    tutor.firstName = firstName || tutor.firstName;
-    tutor.lastName = lastName || tutor.lastName;
-    tutor.fullName = fullName || tutor.fullName;
-    tutor.email = email || tutor.email;
-    tutor.bio = bio || tutor.bio;
-    tutor.subjects = subjects || tutor.subjects;
-    tutor.rate = rate || tutor.rate;
-
     // Save updated tutor
-    await tutor.save();
+    await updatedTutor.save();
 
     // Send response
-    res.status(200).json({ message: 'Tutor profile updated successfully', tutor });
+    res.status(200).json({ message: 'Tutor profile updated successfully', tutor: updatedTutor });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
+// Update tutor rating (PUT)
 router.put("/updateRating/:tutorId", authMiddleware, async (req, res) => {
   try {
     const { studentId, newRating } = req.body;
@@ -54,7 +53,7 @@ router.put("/updateRating/:tutorId", authMiddleware, async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized to update rating' });
     }
 
-    const tutor = await tutorModel.findById(tutorId);
+    const tutor = await tutorModel.findById(tutorId).populate('students');
     if (!tutor) {
       return res.status(404).json({ message: 'Tutor not found' });
     }
@@ -114,9 +113,10 @@ router.post("/authenticate", async (req, res) => {
     console.log("enteredPassword: ", enteredPassword);
 
     // find user
-    const tutor = await tutorModel.findOne({
-      username: enteredUsername,
-    });
+    const tutor = await tutorModel.findOne({ username: enteredUsername })
+      .select("+password")
+      .populate("students");
+
     if (!tutor) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
@@ -146,7 +146,7 @@ router.post("/authenticate", async (req, res) => {
 // get all tutors
 router.get("/", authMiddleware, async (req, res) => {
   try {
-    const items = await tutorModel.find();
+    const items = await tutorModel.find().populate("students");
     res.json(items);
   } catch (error) {
     console.error(error);
@@ -158,7 +158,11 @@ router.get("/", authMiddleware, async (req, res) => {
 router.get("/topTutors", authMiddleware, async (req, res) => {
   try {
     // get the tutors with the highest ratings
-    const topTutors = await tutorModel.find().sort({ averageRating: -1 }).limit(15).exec();
+    const topTutors = await tutorModel.find()
+      .sort({ averageRating: -1 })
+      .limit(15)
+      .populate("students")
+      .exec();
 
     res.status(200).json(topTutors);
   } catch (error) {
@@ -178,7 +182,8 @@ router.get("/search", authMiddleware, async (req, res) => {
     }
 
     // Use regex for case-insensitive and substring matching
-    const tutors = await tutorModel.find({ subjects: { $regex: subject, $options: 'i' } });
+    const tutors = await tutorModel.find({ subjects: { $regex: subject, $options: 'i' } })
+      .populate("students");
 
     // no tutor for subject
     if (tutors.length === 0) {
@@ -210,7 +215,7 @@ router.get("/search", authMiddleware, async (req, res) => {
 
     const filteredTutors = await tutorModel.find({
       subjects: { $in: subjectList },
-    });
+    }).populate("students");
 
     if (filteredTutors.length == 0) {
       return res.status(404).json({ message: "No tutors found for the selected subjects" });
@@ -226,7 +231,7 @@ router.get("/search", authMiddleware, async (req, res) => {
 // get tutor by id
 router.get("/:id", authMiddleware, async (req, res) => {
   try {
-    const item = await tutorModel.findById(req.params.id);
+    const item = await tutorModel.findById(req.params.id).populate("students");
 
     const { password, _v, ...userWithoutPassword } = item._doc;
     console.log("userWithoutPassword: ", userWithoutPassword);
@@ -249,16 +254,14 @@ router.get("/:id/students", authMiddleware, async (req, res) => {
     }
 
     // find tutor
-    const tutor = await tutorModel.findById(tutorId);
+    const tutor = await tutorModel.findById(tutorId).populate("students");
     if (!tutor) {
       return res.status(404).json({ message: 'Tutor not found' });
     }
 
-    // get all students for tutor
-    const students = await studentModel.find({ _id: { $in: tutor.students } });
-    console.log("Students for tutor: ", students);
+    console.log("Students for tutor: ", tutor.students);
 
-    res.status(200).json({ students: students });
+    res.status(200).json({ students: tutor.students });
   }
   catch (error) {
     console.error(error);
@@ -284,11 +287,20 @@ router.post("/addStudent/:tutorId", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // add student to tutor
-    tutor.students.push(student);
+    // Check if the student is already added
+    if (tutor.students.includes(studentId)) {
+      return res.status(400).json({ message: "Student already added to this tutor" });
+    }
+
+    // Add student ID to the tutor's students array
+    tutor.students.push(studentId);
     await tutor.save();
 
-    res.status(200).json({ message: 'Student added successfully', tutor: tutor });
+    const updatedTutor = await tutorModel
+      .findById(tutorId)
+      .populate("students");
+
+    res.status(200).json({ message: 'Student added successfully', tutor: updatedTutor });
   }
   catch (error) {
     console.error(error);
@@ -314,11 +326,23 @@ router.post("/removeStudent/:tutorId", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // remove student from tutor
-    tutor.students = tutor.students.filter((student) => student._id.toString() !== studentId);
+    // Check if the student is in the tutor's list
+    if (!tutor.students.includes(studentId)) {
+      return res.status(400).json({ message: "Student not associated with this tutor" });
+    }
+
+    // Remove the student ID from the tutor's students array
+    tutor.students = tutor.students.filter(
+      (id) => id.toString() !== studentId
+    );
+
     await tutor.save();
 
-    res.status(200).json({ message: 'Student removed successfully', tutor: tutor });
+    const updatedTutor = await tutorModel
+      .findById(tutorId)
+      .populate("students");
+
+    res.status(200).json({ message: 'Student removed successfully', tutor: updatedTutor });
   }
   catch (error) {
     console.error(error);

@@ -9,6 +9,7 @@ const studentSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        select: false, // Hide the password from query results by default
     },
     email: {
         type: String,

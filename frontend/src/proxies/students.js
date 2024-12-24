@@ -1,5 +1,28 @@
 import axiosInstance from "./axiosHandler";
 
+
+const editStudentProfile = async (studentId, updatedData) => {
+  try {
+    const response = await axiosInstance.put(`/studentApi/editProfile/${studentId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    });
+
+    console.log("Student profile updated: ", response);
+    return response.data.student;
+  }
+  catch (error) {
+    if (error.response) {
+      console.error("Error updating student profile:", error.response.data);
+    }
+    else {
+      console.error(error);
+    }
+    throw error;
+  }
+};
+
 const getStudentById = async (studentId) => {
   try {
     const response = await axiosInstance.get(`/studentApi/${studentId}`, {
@@ -57,4 +80,4 @@ const registerStudent = async (studentData) => {
   }
 };
 
-export { getStudentById, authenticateStudent, registerStudent };
+export { editStudentProfile, getStudentById, authenticateStudent, registerStudent };
