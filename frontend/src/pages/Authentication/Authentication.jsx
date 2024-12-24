@@ -282,7 +282,7 @@ const Authentication = () => {
               {isRegistering && !isTutor && (
                 <textarea
                 id="studyBio"
-                value={formValues.studyBackround}
+                value={formValues.studyBackground}
                 onChange={handleChange}
                 placeholder="Your Study Background"
                 className={styles.studyBackround}
