@@ -207,7 +207,7 @@ export default function TutorProfile({
       </div>
 
       <div className={styles.reviewContainer}>
-        <h2>Reviews</h2>
+        <h2>Rating</h2>
         <div className={styles.ratingContainer}>
           <h3 className={styles.rating}>{averageRating}</h3>
         </div>

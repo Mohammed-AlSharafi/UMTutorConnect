@@ -10,7 +10,7 @@ import {
 import { fetchTutorsBySubject } from "../../proxies/tutors";
 
 
-const SearchBar = ({ onSearch, fetchInitialTutors, tutors }) => {
+const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBySubject }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedRatings, setSelectedRatings] = useState([]);
@@ -20,19 +20,21 @@ const SearchBar = ({ onSearch, fetchInitialTutors, tutors }) => {
       if (searchQuery === "") {
         fetchInitialTutors();
       } else {
-        const tutors = await fetchTutorsBySubject(searchQuery);
-        console.log("Fetched tutors: ", tutors);
-        onSearch(tutors, searchQuery);
+        const tutorsBySubject = await fetchTutorsBySubject(searchQuery);
+        console.log("Fetched tutors: ", tutorsBySubject);
+        onSearch(tutorsBySubject);
       }
     } catch (error) {
       // no tutors found for this subject
       if (error.response && error.response.status === 404) {
         console.warn(`No tutors  found for subject: ${searchQuery}`);
-        onSearch([], searchQuery);
+        onSearch([]);
       } else {
         console.error("Error fetching tutors:", error);
       }
     }
+    setSelectedRatings([]);
+    setIsFilterOpen(false);
   };
 
   const handleKeyDown = (e) => {
@@ -54,23 +56,19 @@ const SearchBar = ({ onSearch, fetchInitialTutors, tutors }) => {
   };
 
   const handleApplyFilter = () => {
-    // implementation to apply filter with selected ratings
     console.log("Selected Ratings: ", selectedRatings);
-    // setIsFilterOpen(false);
-    // // Call onSearch again or filter tutors here
-    // onSearch([], searchQuery, selectedRatings);
-    
+
     if (selectedRatings.length === 0) {
-      console.log("selected ratings is 0")
+      console.log("Selected ratings is 0")
       handleSearch();
     } else {
       try {
-        const filteredTutors = tutors.filter((tutor) => {
-          const roundedRating = Math.round(tutor.rating);
+        const filteredTutors = allTutorsBySubject.filter((tutor) => {
+          const roundedRating = Math.round(tutor.averageRating);
           return selectedRatings.includes(roundedRating);
         });
         console.log("Filtered Tutors: ", filteredTutors);
-        onSearch(filteredTutors, searchQuery);
+        onFilter(filteredTutors);
         
       } catch (error) {
         console.error("Error applying rating filter: ", error);
@@ -81,7 +79,8 @@ const SearchBar = ({ onSearch, fetchInitialTutors, tutors }) => {
 
   const handleClearFilter = async () => {
     setSelectedRatings([]);
-    handleSearch();
+    onSearch(allTutorsBySubject);
+    setIsFilterOpen(false);
   };
 
   const renderStars = (rating) => {
