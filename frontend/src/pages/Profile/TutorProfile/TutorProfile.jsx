@@ -179,19 +179,7 @@ export default function TutorProfile({
           </button>
         )} */}
 
-        {/* Action Buttons */}
-          <div className={styles.actionButtons}>
-              {isloggedIn && (
-              <>
-                  <button onClick={editProfile}>
-                  {isEditing ? "Cancel" : "Edit Profile"}
-                  </button>
-                  {isEditing && (
-                  <button onClick={handleSaveProfile}>Save Profile</button>
-                  )}
-              </>
-              )}
-          </div>
+
       </div>
 
       <div>
@@ -228,7 +216,7 @@ export default function TutorProfile({
       <div>
         <h2>Hourly Rate</h2>
         {isEditing ? (
-          <input
+          <textarea
             type="number"
             value={editedRate}
             onChange={(e) => setEditedRate(e.target.value)}
@@ -260,6 +248,23 @@ export default function TutorProfile({
           <button onClick={handleMessageButtonClicked}>Message</button>
         </div>
       )}
+
+      {/* Action Buttons */}
+      <div className={styles.actionButtons}>
+              {isloggedIn && (
+              <>
+                  <button onClick={editProfile}>
+                  {isEditing ? "Cancel" : "Edit Profile"}
+                  </button>
+                  {isEditing && (
+                  <button onClick={handleSaveProfile}>Save Profile</button>
+                  )}
+              </>
+              )}
+          </div>
     </div>
+
+              
+
   );
 }

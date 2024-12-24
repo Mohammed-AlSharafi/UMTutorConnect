@@ -17,6 +17,15 @@
     gap: 0.5rem;
 }
 
+.actionButtons {
+    display: flex;
+    flex-direction: row; /* Align items in a row (same line) */
+    align-items: center; /* Vertically center the items */
+    justify-content: center; /* Horizontally center the items */
+    gap: 1rem; /* Space between buttons */
+    text-align: center; /* Centers text inside the buttons */
+}
+
 .contactSection{
     display: flex;
     flex-direction: column;
