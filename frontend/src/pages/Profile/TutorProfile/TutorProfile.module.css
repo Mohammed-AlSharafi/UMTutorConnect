@@ -4,6 +4,7 @@
     gap: 1rem;
     height: 100%;
     width: 100%;
+
 }
 
 .tutorProfileContainer h3 {
@@ -14,16 +15,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: .5rem; 
 }
 
 .actionButtons {
     display: flex;
-    flex-direction: row; /* Align items in a row (same line) */
-    align-items: center; /* Vertically center the items */
-    justify-content: center; /* Horizontally center the items */
-    gap: 1rem; /* Space between buttons */
-    text-align: center; /* Centers text inside the buttons */
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 1rem; 
+    text-align: center; 
 }
 
 .contactSection{
@@ -61,20 +62,20 @@
 }
 
 .tutorProfileContainer input {
-    all: onset; /* Reset input to look like plain text */
-    font-size: 1.5rem; /* Match the font size of <h2> */
-    font-weight: bold; /* Optional: Adjust based on your <h2> styles */
-    width: 100%; /* Ensure the input spans the same width */
-    /* border-bottom: 2px solid #ccc; Optional: Add a subtle underline for clarity */
-    margin-bottom: 0.5rem; /* Match spacing */
+    all: onset; 
+    font-size: 1.5rem; 
+    font-weight: bold; 
+    width: 100%; 
+    
+    margin-bottom: 0.5rem; 
 }
 
 .profileDetailsContainer input {
-    all: inset; /* Reset input to look like plain text */
-    font-size: 1rem; /* Match the font size of <p> */
-    line-height: 1.5; /* Match line height */
-    color: inherit; /* Inherit text color from parent */
-    width: 100%; /* Full width */
-    /* border-bottom: 1px solid #ccc; Subtle underline */
-    margin-bottom: 0.5rem; /* Match spacing */
+    all: inset; 
+    font-size: 1rem; 
+    line-height: 1.5; 
+    color: inherit; 
+    width: 100%; 
+    
+    margin-bottom: 0.5rem; 
 }

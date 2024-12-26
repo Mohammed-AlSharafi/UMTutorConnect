@@ -13,7 +13,7 @@ export default function TutorProfile({
   updateLoggedInUser,
   tutorInfo,
 }) {
-  const { firstName, lastName, fullName, bio, profilePicture, subjects, averageRating, rate } = tutorInfo;
+  const { firstName, lastName, fullName, bio, profilePicture, subjects, averageRating, rate, role } = tutorInfo;
   const [isEditing, setIsEditing] = useState(false);
   const [editedfirstName, setEditedFirstName] = useState(firstName);
   const [editedlastName, setEditedlastName] = useState(lastName);
@@ -158,6 +158,7 @@ export default function TutorProfile({
             </h2>
           </>
         )}
+        <p>{role}</p>
         {/* <h2>{isEditing ? (
                     <input
                         type="text"

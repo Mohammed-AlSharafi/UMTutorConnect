@@ -39,6 +39,7 @@
 .profileDetailsContainer h2 {
     margin: 0;
     gap: 0.5rem;
+    margin-top: .5rem;
 }
 
 .profileDetailsContainer p {
@@ -53,6 +54,8 @@
     border-radius: .5rem;
     padding: 10px 15px;
     font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     margin-right: .5rem;
     margin-left: .5rem;
 }
