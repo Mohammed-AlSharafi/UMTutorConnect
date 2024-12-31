@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./SearchBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,11 +9,24 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { fetchTutorsBySubject } from "../../proxies/tutors";
 
-
 const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBySubject }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedRatings, setSelectedRatings] = useState([]);
+  const filterRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearch = async () => {
     try {
@@ -25,9 +38,8 @@ const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBy
         onSearch(tutorsBySubject);
       }
     } catch (error) {
-      // no tutors found for this subject
       if (error.response && error.response.status === 404) {
-        console.warn(`No tutors  found for subject: ${searchQuery}`);
+        console.warn(`No tutors found for subject: ${searchQuery}`);
         onSearch([]);
       } else {
         console.error("Error fetching tutors:", error);
@@ -48,31 +60,22 @@ const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBy
   };
 
   const handleRatingSelect = (rating) => {
-    if (selectedRatings.includes(rating)) {
-      setSelectedRatings(selectedRatings.filter((r) => r !== rating));
-    } else {
-      setSelectedRatings([...selectedRatings, rating]);
-    }
+    setSelectedRatings(prevRatings =>
+      prevRatings.includes(rating)
+        ? prevRatings.filter(r => r !== rating)
+        : [...prevRatings, rating]
+    );
   };
 
   const handleApplyFilter = () => {
-    console.log("Selected Ratings: ", selectedRatings);
-
     if (selectedRatings.length === 0) {
-      console.log("Selected ratings is 0")
       handleSearch();
     } else {
-      try {
-        const filteredTutors = allTutorsBySubject.filter((tutor) => {
-          const roundedRating = Math.round(tutor.averageRating);
-          return selectedRatings.includes(roundedRating);
-        });
-        console.log("Filtered Tutors: ", filteredTutors);
-        onFilter(filteredTutors);
-        
-      } catch (error) {
-        console.error("Error applying rating filter: ", error);
-      }
+      const filteredTutors = allTutorsBySubject.filter((tutor) => {
+        const roundedRating = Math.round(tutor.averageRating);
+        return selectedRatings.includes(roundedRating);
+      });
+      onFilter(filteredTutors);
     }
     setIsFilterOpen(false);
   };
@@ -84,12 +87,12 @@ const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBy
   };
 
   const renderStars = (rating) => {
-    return Array.from({ length: rating }, (_, index) => (
+    return Array.from({ length: 5 }, (_, index) => (
       <FontAwesomeIcon
         key={index}
         icon={faStar}
         className={`${styles.star} ${
-          selectedRatings.includes(rating) ? styles.selectedStar : ""
+          index < rating ? styles.selectedStar : ""
         }`}
       />
     ));
@@ -111,7 +114,7 @@ const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBy
         <button className={styles.searchButton} onClick={handleSearch}>
           <FontAwesomeIcon icon={faSearch} />
         </button>
-        <div className={styles.filter}>
+        <div className={styles.filter} ref={filterRef}>
           <button className={styles.filterButton} onClick={handleFilterClick}>
             <FontAwesomeIcon icon={faFilter} />
           </button>
@@ -146,8 +149,8 @@ const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBy
         </div>
       </div>
       {selectedRatings.length > 0 && (
-        <p>
-          Showing tutors with ratings: {selectedRatings.join(", ")} star
+        <p className={styles.selectedRatings}>
+          Showing tutors with ratings: {selectedRatings.sort().join(", ")} star
           {selectedRatings.length > 1 ? "s" : ""}
         </p>
       )}
@@ -156,3 +159,4 @@ const SearchBar = ({ onSearch, fetchInitialTutors, onFilter, tutors, allTutorsBy
 };
 
 export default SearchBar;
+

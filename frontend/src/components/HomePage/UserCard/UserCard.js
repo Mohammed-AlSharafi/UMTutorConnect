@@ -4,7 +4,9 @@ import styles from "./UserCard.module.css";
 const UserCard = ({ name, subjects, rate, averageRating, img, role }) => {
   return (
     <div className={styles.userCard}>
+      <img src={img} alt={name} className={styles.image} />
       <h3 className={styles.userName}>{name}</h3>
+        {role === "Tutor" && (<hr className={styles.nameLine} />)}
       {role === "Tutor" && (
         <>
           <div className={styles.subjects}>
