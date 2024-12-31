@@ -3,5 +3,70 @@
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    width: 100%;
+    gap: .5rem; 
+}
+
+.studentProfileContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 50vh;
+    justify-content: center;
+    align-items: center;
+    padding: 0rem; 
+}
+
+.studentProfileContainer img {
+    display: block;
+    max-width: 100%;
+    width: 150px;
+    border-radius: 50%; 
+
+}
+
+.profileDetailsContainer {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 0rem;
+    border-radius: 1rem;
+    margin: 1rem 0;
+
+}
+
+.profileDetailsContainer h2 {
+    margin: 0;
+    font-size: 1.5rem; 
+    
+}
+
+.profileDetailsContainer p {
+    margin: .25rem 0;
+    font-size: 1rem; 
+    line-height: 1.5;
+}
+
+.studentProfileContainer input {
+    all: inset; 
+    font-size: 1rem; 
+    font-weight: plain; 
+    width: 100%; 
+    margin-bottom: 0.5rem; 
+}
+
+.profileDetailsContainer input {
+    all: inset;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: inherit; 
+    width: 100%;
+    margin-bottom: 0.5rem; 
+}
+
+.studentProfileContainer textarea {
+    all: inset; 
+    font-size: 1rem; 
+    font-weight: plain; 
+    width: 100%; 
+    margin-bottom: 0.5rem; 
 }
