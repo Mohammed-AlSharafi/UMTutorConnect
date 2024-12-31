@@ -48,11 +48,15 @@
 }
 
 .userName {
-  border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
   font-size: 1.2rem;
   font-weight: bold;
   color: #333;
+}
+
+.nameLine{
+  border: 1px solid #ddd;
+  margin: 20px 30px;
 }
 
 .link {

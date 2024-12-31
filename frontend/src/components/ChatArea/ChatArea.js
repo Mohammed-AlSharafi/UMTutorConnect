@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './ChatArea.module.css';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-function ChatArea({ chat, onSendMessage, userId }) {
+function ChatArea({ chat, onSendMessage, userId, onBackToList, isMobile }) {
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -23,6 +25,11 @@ function ChatArea({ chat, onSendMessage, userId }) {
   return (
     <div className={styles.chatArea}>
       <div className={styles.chatHeader}>
+        {isMobile && (
+          <button onClick={onBackToList} className={styles.backButton}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+        )}
         <Link to={`/profile/${chat.otherParticipant.role}/${chat.otherParticipant.id}`} className={styles.link}>
           <span className={styles.name}>{chat.fullName}</span>
         </Link>
@@ -54,3 +61,4 @@ function ChatArea({ chat, onSendMessage, userId }) {
 }
 
 export default ChatArea;
+

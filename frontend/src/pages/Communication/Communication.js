@@ -17,6 +17,17 @@ const Communication = () => {
     const [selectedChat, setSelectedChat] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredChats, setFilteredChats] = useState([]);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [showMessageList, setShowMessageList] = useState(true);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         // get chats from backend
@@ -117,6 +128,13 @@ const Communication = () => {
     const handleSelectChat = (chatId) => {
         const chat = chats.find(c => c._id === chatId);
         setSelectedChat(chat);
+        if (isMobile) {
+            setShowMessageList(false);
+        }
+    };
+
+    const handleBackToList = () => {
+        setShowMessageList(true);
     };
 
     const handleSendMessage = async (content) => {
@@ -145,45 +163,30 @@ const Communication = () => {
 
     // conditionally render MessageList and ChatArea components chats selectedChats and filteredChats are available
     return (
-        // <div className={styles.container}>
-        //     {(chats && selectedChat && filteredChats) && (
-        //         <>
-        //             <MessageList
-        //                 chats={filteredChats}
-        //                 selectedChat={selectedChat}
-        //                 onSelectChat={handleSelectChat}
-        //                 onSearch={handleSearch}
-        //             />
-        //             <ChatArea
-        //                 chat={selectedChat}
-        //                 onSendMessage={handleSendMessage}
-        //                 userId={loggedInUser._id}
-        //             />
-        //         </>
-        //     )}
-        // </div>
-
-
-        // added conditional rendering for if there are no chats available, a placeholder will be displayed instead
         <div className={styles.container}>
             {chats && chats.length > 0 ? (
                 <>
-                    <MessageList
-                        chats={filteredChats}
-                        selectedChat={selectedChat}
-                        onSelectChat={handleSelectChat}
-                        onSearch={handleSearch}
-                    />
-                    <ChatArea
-                        chat={selectedChat}
-                        onSendMessage={handleSendMessage}
-                        userId={loggedInUser._id}
-                    />
+                    {(!isMobile || (isMobile && showMessageList)) && (
+                        <MessageList
+                            chats={filteredChats}
+                            selectedChat={selectedChat}
+                            onSelectChat={handleSelectChat}
+                            onSearch={handleSearch}
+                        />
+                    )}
+                    {(!isMobile || (isMobile && !showMessageList)) && (
+                        <ChatArea
+                            chat={selectedChat}
+                            onSendMessage={handleSendMessage}
+                            userId={loggedInUser._id}
+                            onBackToList={handleBackToList}
+                            isMobile={isMobile}
+                        />
+                    )}
                 </>
             ) : (
                 <div className={styles.placeholder}>
                     <div className={styles.placeholderContent}>
-
                         <h2>No Messages Yet</h2>
                         <p>Start a conversation to see your messages here.</p>
                     </div>
@@ -194,3 +197,4 @@ const Communication = () => {
 };
 
 export default Communication;
+

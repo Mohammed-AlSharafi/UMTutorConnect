@@ -34,11 +34,11 @@
 }
 
 .name:hover {
-  color: #FFD700;
+  color: #b4b4b4;
 }
 
 .link {
-  text-decoration: none; /* Removes underline from the Link */
+  text-decoration: none;
 }
 
 .messagesWrapper {
@@ -103,3 +103,40 @@
 .sendButton:hover {
   background-color: #3a3f6d;
 }
+
+.backButton{
+  padding: 0.5rem 1rem;
+  background-color: #545B9E;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .chatArea {
+    height: calc(100vh - 60px);
+  }
+
+  .messagesWrapper {
+    max-height: calc(100vh - 180px);
+  }
+
+  .chatHeader {
+    background-color: #dcdcdc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .name {
+    color: black;
+  }
+  .name:hover {
+    color: #434343;
+  }
+  .backButton{
+    background-color: #dcdcdc;
+    color: black;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+}
+

@@ -35,3 +35,30 @@
   margin-bottom: 20px;
   color: #666;
 }
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    padding: 0.5rem;
+  }
+
+  .mobileOnly {
+    display: block;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobileOnly {
+    display: none;
+  }
+
+  .desktopOnly {
+    display: block;
+  }
+}
+

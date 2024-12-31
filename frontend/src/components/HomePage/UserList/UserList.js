@@ -15,7 +15,7 @@ const UserList = ({ users, title }) => {
 							subjects={foundUser.subjects}
 							rate={foundUser.rate}
 							averageRating={foundUser.averageRating}
-							img={foundUser.img}
+							img={foundUser.profilePicture}
 							role={foundUser.role}
 						/>
 					</Link>
