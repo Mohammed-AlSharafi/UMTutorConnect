@@ -295,7 +295,7 @@ const Authentication = () => {
                     id="bio"
                     value={formValues.bio}
                     onChange={handleChange}
-                    placeholder="Your bio"
+                    placeholder="Your Teaching Schedule"
                     className={styles.bioField}
                     required
                   />

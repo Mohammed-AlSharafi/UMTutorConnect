@@ -184,7 +184,7 @@ export default function TutorProfile({
       </div>
 
       <div>
-        <h2>Bio</h2>
+        <h2>Schedule</h2>
         {isEditing ? (
           <textarea
             value={editedBio}
