@@ -37,7 +37,7 @@ router.put("/editProfile/:id", authMiddleware, async (req, res) => {
 // Register student (POST)
 router.post("/register", async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password, studyBackround, profilePicture } = req.body;
+    const { firstName, lastName, username, email, password, studyBackground, profilePicture } = req.body;
 
     // Check if the student already exists
     const existingStudent = await studentModel.findOne({ username });
@@ -55,7 +55,7 @@ router.post("/register", async (req, res) => {
       username,
       email,
       password,
-      studyBackround,
+      background: studyBackground,
       profilePicture,
     });
 

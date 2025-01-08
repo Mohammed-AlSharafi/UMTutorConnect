@@ -27,7 +27,7 @@ const Authentication = () => {
     password: "",
     confirmPassword: "",
     bio: "",
-    studyBackround: "",
+    studyBackground: "",
     role: "Student",
     profilePicture: "https://res.cloudinary.com/ds7sfbksv/image/upload/v1734976936/98a0fe74-c9f7-4414-ae3f-d5e02372b45c.png",
   });
@@ -63,9 +63,9 @@ const Authentication = () => {
 
       if (!isTutor) {
 
-        const { firstName, lastName, username, email, password } = formValues;
+        const { firstName, lastName, username, email, password, studyBackground } = formValues;
         try {
-          const response = await registerStudent({ firstName, lastName, username, email, password });
+          const response = await registerStudent({ firstName, lastName, username, email, password, studyBackground });
           alert("Student registered successfully!");
           console.log(response);  // Log the response for debugging
         } catch (error) {
@@ -281,11 +281,11 @@ const Authentication = () => {
               )}
               {isRegistering && !isTutor && (
                 <textarea
-                id="studyBio"
+                id="studyBackground"
                 value={formValues.studyBackground}
                 onChange={handleChange}
                 placeholder="Your Study Background"
-                className={styles.studyBackround}
+                className={styles.studyBackground}
                 required
               />
               )}
