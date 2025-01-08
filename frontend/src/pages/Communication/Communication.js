@@ -34,7 +34,7 @@ const Communication = () => {
         async function fetchChats() {
             try {
                 const chats = await getChats(loggedInUser._id, loggedInUser.role);
-                console.log(chats);
+                console.log("chats: ", chats);
                 if (chats) {
                     setChats(chats);
 
