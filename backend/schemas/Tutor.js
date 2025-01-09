@@ -61,7 +61,7 @@ const tutorSchema = new mongoose.Schema({
     rate: {
         type: Number,
         required: true,
-        default: 10
+        default: 10.0
     },
     ratings: {
         type: [ratingSchema],
@@ -69,7 +69,7 @@ const tutorSchema = new mongoose.Schema({
     },
     averageRating: {
         type: Number,
-        default: 0,
+        default: 0.0,
         required: true,
         validate: {
             validator: function (v) {

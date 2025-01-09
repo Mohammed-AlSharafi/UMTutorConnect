@@ -89,7 +89,7 @@
 
 .inputField,
 .bioField,
-.studyBackround {
+.studyBackground {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #ccc;
@@ -97,7 +97,7 @@
   font-size: 1rem;
 }
 
-.bioField, .studyBackround {
+.bioField, .studyBackground {
   min-height: 100px;
   resize: vertical;
 }
